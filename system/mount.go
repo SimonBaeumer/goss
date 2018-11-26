@@ -88,7 +88,10 @@ func (m *DefMount) Filesystem() (string, error) {
 }
 
 func getMount(mountpoint string) (*mount.Info, error) {
-	entries, err := mount.GetMounts()
+	emptyFilter := func(info *mount.Info) (skip bool, stop bool) {
+		return false, false
+	}
+	entries, err := mount.GetMounts(emptyFilter)
 	if err != nil {
 		return nil, err
 	}
