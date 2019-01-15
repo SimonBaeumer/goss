@@ -15,6 +15,7 @@ type HTTP interface {
 	Exists() (bool, error)
 	SetAllowInsecure(bool)
 	SetNoFollowRedirects(bool)
+	Headers() (map[string]string, error)
 }
 
 type DefHTTP struct {
@@ -109,4 +110,12 @@ func (u *DefHTTP) Body() (io.Reader, error) {
 	}
 
 	return u.resp.Body, nil
+}
+
+func (u *DefHTTP) Headers() (http.Header, error) {
+	if err := u.setup(); err != nil {
+		return nil, err
+	}
+
+	return u.resp.Header
 }

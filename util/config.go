@@ -16,6 +16,7 @@ type Config struct {
 	Server            string
 	Username          string
 	Password          string
+	Headers           map[string]string
 }
 
 type OutputConfig struct {
