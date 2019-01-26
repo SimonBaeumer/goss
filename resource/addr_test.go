@@ -2,8 +2,8 @@ package resource
 
 import (
 	"testing"
-	"github.com/aelsabbahy/goss/util"
-	"github.com/aelsabbahy/goss/system/mock_system"
+	"github.com/SimonBaeumer/goss/util"
+	"github.com/SimonBaeumer/goss/system/mock_system"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
