@@ -1,3 +1,6 @@
+Forked from `aelsabbahy/goss`, just experimental at the moment.
+
+
 # Goss - Quick and Easy server validation
 
 [![Build Status](https://travis-ci.org/SimonBaeumer/goss.svg?branch=master)](https://travis-ci.org/aelsabbahy/goss)
