@@ -5,6 +5,8 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+const DefaultTimeoutMS = 500
+
 type Addr struct {
 	Title     string  `json:"title,omitempty" yaml:"title,omitempty"`
 	Meta      meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
@@ -23,7 +25,7 @@ func (r *Addr) GetMeta() meta    { return r.Meta }
 func (a *Addr) Validate(sys *system.System) []TestResult {
 	skip := false
 	if a.Timeout == 0 {
-		a.Timeout = 500
+		a.Timeout = DefaultTimeoutMS
 	}
 	sysAddr := sys.NewAddr(a.Address, sys, util.Config{Timeout: a.Timeout})
 
@@ -40,5 +42,6 @@ func NewAddr(sysAddr system.Addr, config util.Config) (*Addr, error) {
 		Reachable: reachable,
 		Timeout:   config.Timeout,
 	}
+
 	return a, err
 }

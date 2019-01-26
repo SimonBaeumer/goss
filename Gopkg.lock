@@ -30,6 +30,14 @@
   revision = "e8e29e67948b15c64e60d6617182c18cf7eead7f"
 
 [[projects]]
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  pruneopts = "UT"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
+
+[[projects]]
   digest = "1:f90b8392b93331d9b45212b3c8056af949b8bf4002a67b4a11b530ef566455d2"
   name = "github.com/docker/docker"
   packages = ["pkg/mount"]
@@ -42,6 +50,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "bf82308e8c8546dc2b945157173eb8a959ae9505"
+
+[[projects]]
+  digest = "1:b60efdeb75d3c0ceed88783ac2495256aba3491a537d0f31401202579fd62a94"
+  name = "github.com/golang/mock"
+  packages = ["gomock"]
+  pruneopts = "UT"
+  revision = "51421b967af1f557f93a59e0057aaf15ca02e29c"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:c658e84ad3916da105a761660dcaeb01e63416c8ec7bc62256a9b411a05fcd67"
@@ -108,6 +124,22 @@
   revision = "1881a9bccb818787f68c52bfba648c6cf34c34fa"
 
 [[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  pruneopts = "UT"
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:972c2427413d41a1e06ca4897e8528e5a1622894050e2f527b38ddf0f343f759"
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  pruneopts = "UT"
+  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
+  version = "v1.3.0"
+
+[[projects]]
   digest = "1:46a5209e68232bc5ea9178a03ceb212b852a8520afc3e731379f290a129bca84"
   name = "github.com/urfave/cli"
   packages = ["."]
@@ -139,12 +171,14 @@
     "github.com/cheekybits/genny/generic",
     "github.com/docker/docker/pkg/mount",
     "github.com/fatih/color",
+    "github.com/golang/mock/gomock",
     "github.com/miekg/dns",
     "github.com/oleiade/reflections",
     "github.com/onsi/gomega",
     "github.com/onsi/gomega/types",
     "github.com/opencontainers/runc/libcontainer/user",
     "github.com/patrickmn/go-cache",
+    "github.com/stretchr/testify/assert",
     "github.com/urfave/cli",
     "gopkg.in/yaml.v2",
   ]
