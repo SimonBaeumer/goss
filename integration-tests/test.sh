@@ -17,10 +17,10 @@ seccomp_opts() {
 cp "../release/goss-linux-$arch" "goss/$os/"
 # Run build if Dockerfile has changed but hasn't been pushed to dockerhub
 if ! md5sum -c "Dockerfile_${os}.md5"; then
-  docker build -t "aelsabbahy/goss_${os}:latest" - < "Dockerfile_$os"
+  docker build -t "SimonBaeumer/goss_${os}:latest" - < "Dockerfile_$os"
 # Pull if image doesn't exist locally
-elif ! docker images | grep "aelsabbahy/goss_$os";then
-  docker pull "aelsabbahy/goss_$os"
+elif ! docker images | grep "SimonBaeumer/goss_$os";then
+  docker pull "SimonBaeumer/goss_$os"
 fi
 
 container_name="goss_int_test_${os}_${arch}"
@@ -33,7 +33,7 @@ if docker ps -a | grep "$container_name";then
   docker rm -vf "$container_name"
 fi
 opts=(--env OS=$os --cap-add SYS_ADMIN -v "$PWD/goss:/goss"  -d --name "$container_name" $(seccomp_opts))
-id=$(docker run "${opts[@]}" "aelsabbahy/goss_$os" /sbin/init)
+id=$(docker run "${opts[@]}" "SimonBaeumer/goss_$os" /sbin/init)
 ip=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' "$id")
 trap "rv=\$?; docker rm -vf $id; exit \$rv" INT TERM EXIT
 # Give httpd time to start up, adding 1 second to see if it helps with intermittent CI failures

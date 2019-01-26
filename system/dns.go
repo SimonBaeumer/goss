@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 	"github.com/miekg/dns"
 )
 

@@ -13,7 +13,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/aelsabbahy/goss/resource"
+	"github.com/SimonBaeumer/goss/resource"
 	"github.com/urfave/cli"
 )
 

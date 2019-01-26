@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/aelsabbahy/go-ps"
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type Process interface {

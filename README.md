@@ -1,16 +1,16 @@
 # Goss - Quick and Easy server validation
 
-[![Build Status](https://travis-ci.org/aelsabbahy/goss.svg?branch=master)](https://travis-ci.org/aelsabbahy/goss)
-[![Github All Releases](https://img.shields.io/github/downloads/aelsabbahy/goss/total.svg?maxAge=604800)](https://github.com/aelsabbahy/goss/releases)
+[![Build Status](https://travis-ci.org/SimonBaeumer/goss.svg?branch=master)](https://travis-ci.org/aelsabbahy/goss)
+[![Github All Releases](https://img.shields.io/github/downloads/SimonBaeumer/goss/total.svg?maxAge=604800)](https://github.com/aelsabbahy/goss/releases)
 **
 [![Twitter Follow](https://img.shields.io/twitter/follow/aelsabbahy1.svg?style=social&label=Follow&maxAge=2592000)](https://twitter.com/aelsabbahy1)
 [![Blog](https://img.shields.io/badge/follow-blog-brightgreen.svg)](https://medium.com/@aelsabbahy)
 
 ## Goss in 45 seconds
 
-**Note:** For an even faster way of doing this, see: [autoadd](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#autoadd-aa---auto-add-all-matching-resources-to-test-suite)
+**Note:** For an even faster way of doing this, see: [autoadd](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#autoadd-aa---auto-add-all-matching-resources-to-test-suite)
 
-**Note:** For testing docker containers see the [dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss) wrapper
+**Note:** For testing docker containers see the [dgoss](https://github.com/SimonBaeumer/goss/tree/master/extras/dgoss) wrapper
 
 **Note:** For some Docker/Kubernetes healthcheck, health endpoint, and
 container ordering examples, see my blog post
@@ -27,12 +27,12 @@ Goss is a YAML based [serverspec](http://serverspec.org/) alternative tool for v
 ### Why use Goss?
 
 * Goss is EASY! - [Goss in 45 seconds](#goss-in-45-seconds)
-* Goss is FAST! - small-medium test suits are near instantaneous, see [benchmarks](https://github.com/aelsabbahy/goss/wiki/Benchmarks)
+* Goss is FAST! - small-medium test suits are near instantaneous, see [benchmarks](https://github.com/SimonBaeumer/goss/wiki/Benchmarks)
 * Goss is SMALL! - <10MB single self-contained binary
 
 ## Installation
 
-This will install goss and [dgoss](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss).
+This will install goss and [dgoss](https://github.com/SimonBaeumer/goss/tree/master/extras/dgoss).
 
 **Note:** Using `curl | sh` is not recommended for production systems, use manual installation below.
 
@@ -48,11 +48,11 @@ curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.6 GOSS_DST=~/bin sh
 
 ```bash
 # See https://github.com/aelsabbahy/goss/releases for release versions
-curl -L https://github.com/aelsabbahy/goss/releases/download/_VERSION_/goss-linux-amd64 -o /usr/local/bin/goss
+curl -L https://github.com/SimonBaeumer/goss/releases/download/_VERSION_/goss-linux-amd64 -o /usr/local/bin/goss
 chmod +rx /usr/local/bin/goss
 
 # (optional) dgoss docker wrapper (use 'master' for latest version)
-curl -L https://raw.githubusercontent.com/aelsabbahy/goss/_VERSION_/extras/dgoss/dgoss -o /usr/local/bin/dgoss
+curl -L https://raw.githubusercontent.com/SimonBaeumer/goss/_VERSION_/extras/dgoss/dgoss -o /usr/local/bin/dgoss
 chmod +rx /usr/local/bin/dgoss
 ```
 
@@ -64,13 +64,13 @@ make build
 
 ## Full Documentation
 
-Documentation is available here: https://github.com/aelsabbahy/goss/blob/master/docs/manual.md
+Documentation is available here: https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md
 
 ## Quick start
 
 ### Writing a simple sshd test
 
-An initial set of tests can be derived from the system state by using the [add](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#add-a---add-system-resource-to-test-suite) or [autoadd](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#autoadd-aa---auto-add-all-matching-resources-to-test-suite) commands.
+An initial set of tests can be derived from the system state by using the [add](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#add-a---add-system-resource-to-test-suite) or [autoadd](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#autoadd-aa---auto-add-all-matching-resources-to-test-suite) commands.
 
 Let's write a simple sshd test using autoadd.
 
@@ -126,7 +126,7 @@ Total Duration: 0.021s # <- yeah, it's that fast..
 Count: 15, Failed: 0
 ```
 
-* Edit it to use [templates](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#templates), and run with a vars file
+* Edit it to use [templates](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#templates), and run with a vars file
 
 ```
 goss --vars vars.yaml validate
@@ -153,9 +153,9 @@ curl localhost:8080/healthz
 
 Goss files can be manually edited to use:
 
-* [Patterns](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#patterns)
-* [Advanced Matchers](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#advanced-matchers)
-* [Templates](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#templates)
+* [Patterns](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#patterns)
+* [Advanced Matchers](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#advanced-matchers)
+* [Templates](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#templates)
 * `title` and `meta` (arbitrary data) attributes are persisted when adding other resources with `goss add`
 
 Some examples:

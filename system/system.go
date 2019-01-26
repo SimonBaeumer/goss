@@ -10,7 +10,7 @@ import (
 	"github.com/aelsabbahy/GOnetstat"
 	// This needs a better name
 	"github.com/aelsabbahy/go-ps"
-	util2 "github.com/aelsabbahy/goss/util"
+	util2 "github.com/SimonBaeumer/goss/util"
 	"github.com/urfave/cli"
 )
 

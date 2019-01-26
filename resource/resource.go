@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aelsabbahy/goss/system"
+	"github.com/SimonBaeumer/goss/system"
 	"github.com/oleiade/reflections"
 )
 

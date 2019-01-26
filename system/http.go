@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 	"time"
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type HTTP interface {

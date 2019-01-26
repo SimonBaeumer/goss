@@ -3,7 +3,7 @@ package system
 import (
 	"errors"
 
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type Package interface {

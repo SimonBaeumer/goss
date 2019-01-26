@@ -3,8 +3,8 @@ package resource
 import (
 	"strings"
 
-	"github.com/aelsabbahy/goss/system"
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/system"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type DNS struct {

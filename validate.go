@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aelsabbahy/goss/outputs"
-	"github.com/aelsabbahy/goss/resource"
-	"github.com/aelsabbahy/goss/system"
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/outputs"
+	"github.com/SimonBaeumer/goss/resource"
+	"github.com/SimonBaeumer/goss/system"
+	"github.com/SimonBaeumer/goss/util"
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
 )

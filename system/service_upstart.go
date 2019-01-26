@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type ServiceUpstart struct {
