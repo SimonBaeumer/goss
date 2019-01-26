@@ -1,6 +1,6 @@
 package system
 
-import "github.com/aelsabbahy/goss/util"
+import "github.com/SimonBaeumer/goss/util"
 
 type Gossfile interface {
 	Path() string

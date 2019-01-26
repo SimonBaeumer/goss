@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aelsabbahy/goss/resource"
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/resource"
+	"github.com/SimonBaeumer/goss/util"
 	"github.com/fatih/color"
 )
 

@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/aelsabbahy/goss/resource"
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/resource"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type Nagios struct{}

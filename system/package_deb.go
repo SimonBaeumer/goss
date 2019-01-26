@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/aelsabbahy/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 )
 
 type DebPackage struct {

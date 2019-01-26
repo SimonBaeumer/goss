@@ -1,6 +1,6 @@
 export GO15VENDOREXPERIMENT=1
 
-exe = github.com/aelsabbahy/goss/cmd/goss
+exe = github.com/SimonBaeumer/goss/cmd/goss
 pkgs = $(shell ./novendor.sh)
 cmd = goss
 TRAVIS_TAG ?= "0.0.0"
