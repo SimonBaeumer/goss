@@ -17,7 +17,7 @@ seccomp_opts() {
 cp "../release/goss-linux-$arch" "goss/$os/"
 # Run build if Dockerfile has changed but hasn't been pushed to dockerhub
 if ! md5sum -c "Dockerfile_${os}.md5"; then
-  docker build -t "simonbaeumer/goss_${os}:latest" - < "Dockerfile_$os"
+  docker build -q -t "simonbaeumer/goss_${os}:latest" - < "Dockerfile_$os"
 # Pull if image doesn't exist locally
 elif ! docker images | grep "SimonBaeumer/goss_$os";then
   docker pull "simonbaeumer/goss_$os"

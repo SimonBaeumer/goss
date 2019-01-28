@@ -8,6 +8,8 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+type Header map[string][]string
+
 type HTTP interface {
 	HTTP() string
 	Status() (int, error)
@@ -15,6 +17,7 @@ type HTTP interface {
 	Exists() (bool, error)
 	SetAllowInsecure(bool)
 	SetNoFollowRedirects(bool)
+	Headers() (Header, error)
 }
 
 type DefHTTP struct {
@@ -40,6 +43,7 @@ func NewDefHTTP(http string, system *System, config util.Config) HTTP {
 	}
 }
 
+//The setup method configures the http client and sends the request.
 func (u *DefHTTP) setup() error {
 	if u.loaded {
 		return u.err
@@ -109,4 +113,17 @@ func (u *DefHTTP) Body() (io.Reader, error) {
 	}
 
 	return u.resp.Body, nil
+}
+
+func (u *DefHTTP) Headers() (Header, error) {
+	if err := u.setup(); err != nil {
+		return nil, err
+	}
+
+	headers := make(Header)
+	for k, v := range u.resp.Header {
+		headers[k] = v
+	}
+
+	return headers, nil
 }

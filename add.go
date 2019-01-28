@@ -15,6 +15,8 @@ import (
 // Simple wrapper to add multiple resources
 func AddResources(fileName, resourceName string, keys []string, c *cli.Context) error {
 	OutStoreFormat = getStoreFormatFromFileName(fileName)
+	header := extractHeaderArgument(c.String("header"))
+
 	config := util.Config{
 		IgnoreList:        c.GlobalStringSlice("exclude-attr"),
 		Timeout:           int(c.Duration("timeout") / time.Millisecond),
@@ -23,6 +25,7 @@ func AddResources(fileName, resourceName string, keys []string, c *cli.Context) 
 		Server:            c.String("server"),
 		Username:          c.String("username"),
 		Password:          c.String("password"),
+		Header:            header,
 	}
 
 	var gossConfig GossConfig
@@ -42,6 +45,16 @@ func AddResources(fileName, resourceName string, keys []string, c *cli.Context) 
 	WriteJSON(fileName, gossConfig)
 
 	return nil
+}
+
+func extractHeaderArgument(headerArg string) map[string][]string {
+	if headerArg == "" {
+		return make(map[string][]string)
+	}
+	rawHeaders := strings.Split(headerArg, ":")
+	headers := make(map[string][]string)
+	headers[rawHeaders[0]] = []string{strings.TrimSpace(rawHeaders[1])}
+	return headers
 }
 
 func AddResource(fileName string, gossConfig GossConfig, resourceName, key string, c *cli.Context, config util.Config, sys *system.System) error {

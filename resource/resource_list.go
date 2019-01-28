@@ -18,6 +18,7 @@ import (
 //go:generate goimports -w resource_list.go resource_list.go
 
 type AddrMap map[string]*Addr
+var BlacklistedAutoAddHeaders = [...]string{"Set-Cookie", "set-cookie", "Date", "date"}
 
 func (r AddrMap) AppendSysResource(sr string, sys *system.System, config util.Config) (*Addr, error) {
 	sysres := sys.NewAddr(sr, sys, config)
@@ -1419,18 +1420,32 @@ func (ret *InterfaceMap) UnmarshalYAML(unmarshal func(v interface{}) error) erro
 
 type HTTPMap map[string]*HTTP
 
-func (r HTTPMap) AppendSysResource(sr string, sys *system.System, config util.Config) (*HTTP, error) {
-	sysres := sys.NewHTTP(sr, sys, config)
+func (r HTTPMap) AppendSysResource(src string, sys *system.System, config util.Config) (*HTTP, error) {
+	sysres := sys.NewHTTP(src, sys, config)
 	res, err := NewHTTP(sysres, config)
 	if err != nil {
 		return nil, err
 	}
+
+	// Remove headers because of the instability of the generated data
+	res.Headers = config.Header
+
 	if old_res, ok := r[res.ID()]; ok {
 		res.Title = old_res.Title
 		res.Meta = old_res.Meta
 	}
 	r[res.ID()] = res
+
 	return res, nil
+}
+
+func (r HTTPMap) isBlacklistedHeader(key string) bool {
+	for _, listedKey := range BlacklistedAutoAddHeaders {
+		if listedKey == key {
+			return true
+		}
+	}
+	return false
 }
 
 func (r HTTPMap) AppendSysResourceIfExists(sr string, sys *system.System) (*HTTP, system.HTTP, bool) {

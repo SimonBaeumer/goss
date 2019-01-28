@@ -293,6 +293,10 @@ func main() {
 							Name: "password, p",
 							Usage: "Password for basic auth",
 						},
+						cli.StringFlag{
+							Name: "header",
+							Usage: "Set-Cookie: Value",
+						},
 					},
 					Action: func(c *cli.Context) error {
 						goss.AddResources(c.GlobalString("gossfile"), "HTTP", c.Args(), c)

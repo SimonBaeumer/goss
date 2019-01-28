@@ -58,9 +58,9 @@ goss a "${args[@]}" kernel-param kernel.ostype
 
 goss a "${args[@]}" mount /dev
 
-goss a "${args[@]}" http https://www.google.com
+goss a "${args[@]}" http https://www.google.com --header "Server: gws"
 
-goss a "${args[@]}" http http://google.com -r
+goss a "${args[@]}" http http://google.com -r --header "Server: gws"
 
 # Auto-add
 # Validate that empty configs don't get created
