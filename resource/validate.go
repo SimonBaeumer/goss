@@ -17,6 +17,7 @@ const (
 	Value = iota
 	Values
 	Contains
+	Header
 )
 
 const (

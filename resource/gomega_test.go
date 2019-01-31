@@ -2,7 +2,6 @@ package resource
 
 import (
 	"encoding/json"
-	"fmt"
 	"reflect"
 	"regexp"
 	"testing"
@@ -163,8 +162,8 @@ func gomegaEqual(g, w interface{}, negateTester bool) bool {
 	}
 	gotMessage = sanitizeMatcherText(gotMessage)
 	wantMessage = sanitizeMatcherText(wantMessage)
-	fmt.Println("got:", gotMessage)
-	fmt.Println("want:", wantMessage)
+	//fmt.Println("got:", gotMessage)
+	//fmt.Println("want:", wantMessage)
 
 	return gotT == wantT &&
 		gotMessage == wantMessage

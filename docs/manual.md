@@ -578,6 +578,13 @@ http:
     body: [] # Check http response content for these patterns
     username: "" # username for basic auth
     password: "" # password for basic auth
+    headers: # Check for http headers, is not support for add command
+      key:
+        - value
+        - another value
+    request-headers: # define headers should be send within the request
+      key:
+        - value
 ```
 
 
