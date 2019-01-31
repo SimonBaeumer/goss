@@ -582,6 +582,9 @@ http:
       key:
         - value
         - another value
+    request-headers: # define headers should be send within the request
+      key:
+        - value
 ```
 
 
