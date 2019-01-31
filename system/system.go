@@ -18,6 +18,7 @@ type Resource interface {
 	Exists() (bool, error)
 }
 
+// System holds all constructor functions for each
 type System struct {
 	NewPackage     func(string, *System, util2.Config) Package
 	NewFile        func(string, *System, util2.Config) File
@@ -75,7 +76,7 @@ func New(c *cli.Context) *System {
 	return sys
 }
 
-// detectPackage adds the correct package creation function to a System struct
+// DetectPackage adds the correct package creation function to a System struct
 func (sys *System) detectPackage(c *cli.Context) {
 	p := c.GlobalString("package")
 	if p != "deb" && p != "apk" && p != "pacman" && p != "rpm" {
@@ -93,7 +94,7 @@ func (sys *System) detectPackage(c *cli.Context) {
 	}
 }
 
-// detectService adds the correct service creation function to a System struct
+// DetectService adds the correct service creation function to a System struct
 func (sys *System) detectService() {
 	switch DetectService() {
 	case "upstart":

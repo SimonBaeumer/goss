@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-// Simple wrapper to add multiple resources
+// AddResources is a sSimple wrapper to add multiple resources
 func AddResources(fileName, resourceName string, keys []string, c *cli.Context) error {
 	OutStoreFormat = getStoreFormatFromFileName(fileName)
 	header := extractHeaderArgument(c.String("header"))
