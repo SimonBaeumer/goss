@@ -1,13 +1,8 @@
-Forked from `aelsabbahy/goss`, just experimental at the moment.
-
-
 # Goss - Quick and Easy server validation
 
 [![Build Status](https://travis-ci.org/SimonBaeumer/goss.svg?branch=master)](https://travis-ci.org/SimonBaeumer/goss)
-[![Github All Releases](https://img.shields.io/github/downloads/SimonBaeumer/goss/total.svg?maxAge=604800)](https://github.com/aelsabbahy/goss/releases)
-**
-[![Twitter Follow](https://img.shields.io/twitter/follow/aelsabbahy1.svg?style=social&label=Follow&maxAge=2592000)](https://twitter.com/aelsabbahy1)
-[![Blog](https://img.shields.io/badge/follow-blog-brightgreen.svg)](https://medium.com/@aelsabbahy)
+[![Go Report Card](https://goreportcard.com/badge/github.com/SimonBaeumer/goss)](https://goreportcard.com/report/github.com/SimonBaeumer/goss)
+[![Github All Releases](https://img.shields.io/github/downloads/SimonBaeumer/goss/total.svg?maxAge=604800)](https://github.com/SimonBaeumer/goss/releases)
 
 ## Goss in 45 seconds
 
@@ -73,7 +68,7 @@ Documentation is available here: https://github.com/SimonBaeumer/goss/blob/maste
 
 ### Writing a simple sshd test
 
-An initial set of tests can be derived from the system state by using the [add](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#add-a---add-system-resource-to-test-suite) or [autoadd](https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#autoadd-aa---auto-add-all-matching-resources-to-test-suite) commands.
+An initial set of tests can be derived from the system state by using the [add](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#add-a---add-system-resource-to-test-suite) or [autoadd](https://github.com/SimonBaeumer/goss/blob/master/docs/manual.md#autoadd-aa---auto-add-all-matching-resources-to-test-suite) commands.
 
 Let's write a simple sshd test using autoadd.
 
@@ -262,3 +257,7 @@ Service:
 * Upstart
 
 [kubernetes-simplified-health-checks]: https://medium.com/@aelsabbahy/docker-1-12-kubernetes-simplified-health-checks-and-container-ordering-with-goss-fa8debbe676c
+
+## Credits
+
+Original project: https://github.com/aelsabbahy/goss
