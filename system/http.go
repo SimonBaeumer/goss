@@ -30,6 +30,7 @@ type DefHTTP struct {
 	err               error
 	Username          string
 	Password          string
+	RequestHeaders    Header
 }
 
 func NewDefHTTP(http string, system *System, config util.Config) HTTP {
@@ -40,6 +41,7 @@ func NewDefHTTP(http string, system *System, config util.Config) HTTP {
 		Timeout:           config.Timeout,
 		Username:		   config.Username,
 		Password:          config.Password,
+		RequestHeaders:    config.RequestHeaders,
 	}
 }
 
@@ -66,6 +68,13 @@ func (u *DefHTTP) setup() error {
 	}
 
 	req, err := http.NewRequest("GET", u.http, nil)
+
+	for key, values := range u.RequestHeaders {
+		for _, value := range values {
+			req.Header.Add(key, value)
+		}
+	}
+
 	if err != nil {
 		return u.err
 	}

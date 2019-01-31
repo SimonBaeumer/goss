@@ -1,10 +1,10 @@
 package resource
 
 import (
-	"fmt"
-	"io"
-	"strings"
-	"testing"
+    "fmt"
+    "io"
+    "strings"
+    "testing"
 )
 
 type FakeResource struct {
@@ -139,4 +139,3 @@ func TestValidateContainsSkip(t *testing.T) {
 		}
 	}
 }
-

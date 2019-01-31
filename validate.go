@@ -95,7 +95,7 @@ func Validate(c *cli.Context, startTime time.Time) {
 }
 
 func validate(sys *system.System, gossConfig GossConfig, maxConcurrent int) <-chan []resource.TestResult {
-	out := make(chan []resource.TestResult)
+    out := make(chan []resource.TestResult)
 	in := make(chan resource.Resource)
 
 	go func() {

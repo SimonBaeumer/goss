@@ -6,6 +6,7 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/yaml.v2"
 	"testing"
 )
 
@@ -133,4 +134,26 @@ func Test_isNotInSlice(t *testing.T) {
 
 	got := isInStringSlice(haystack, "pear")
 	assert.False(t, got)
+}
+
+func Test_ParseYAML(t *testing.T) {
+	configString :=  []byte(`
+status: 200
+allow-insecure: true
+no-follow-redirects: true
+request-headers:
+    key:
+    - value
+    - value2
+`)
+
+	got := new(HTTP)
+	err := yaml.Unmarshal(configString, got)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 200, got.Status)
+	assert.Equal(t, true, got.AllowInsecure)
+	assert.Equal(t, true, got.NoFollowRedirects)
+	assert.IsType(t, make(map[string][]string), got.RequestHeaders)
+	assert.Equal(t, []string{"value", "value2"}, got.RequestHeaders["key"])
 }

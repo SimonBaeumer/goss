@@ -1,11 +1,11 @@
 package resource
 
 import (
-	"github.com/SimonBaeumer/goss/system"
-	"github.com/SimonBaeumer/goss/util"
-	"reflect"
-	"strings"
-	"time"
+    "github.com/SimonBaeumer/goss/system"
+    "github.com/SimonBaeumer/goss/util"
+    "reflect"
+    "strings"
+    "time"
 )
 
 const TimeoutMS = 5000
@@ -22,6 +22,7 @@ type HTTP struct {
 	Username          string   			  	`json:"username,omitempty" yaml:"username,omitempty"`
 	Password          string   			  	`json:"password,omitempty" yaml:"password,omitempty"`
 	Headers			  map[string][]string   `json:"headers,omitempty" yaml:"headers,omitempty"`
+	RequestHeaders 	  map[string][]string   `json:"request-headers,omitempty" yaml:"request-headers,omitempty"`
 }
 
 func (u *HTTP) ID() string      { return u.HTTP }
@@ -34,8 +35,13 @@ func (u *HTTP) Validate(sys *system.System) []TestResult {
 	skip := false
 
 	conf := util.Config{
-		AllowInsecure: u.AllowInsecure, NoFollowRedirects: u.NoFollowRedirects,
-		Timeout: u.Timeout, Username: u.Username, Password: u.Password}
+		AllowInsecure: u.AllowInsecure,
+		NoFollowRedirects: u.NoFollowRedirects,
+		Timeout: u.Timeout,
+		Username: u.Username,
+		Password: u.Password,
+		RequestHeaders: u.RequestHeaders,
+	}
 
 	sysHTTP := sys.NewHTTP(
 		u.HTTP,
@@ -105,27 +111,22 @@ func validateHeader(res ResourceRead, property string, expectedHeaders map[strin
 		)
 	}
 
-	var actualString string
-	for k, values := range actualHeaders {
-		for _, v := range values {
-			actualString += k + ": " + v + "\n"
-		}
-	}
+	actualString := convertHeaderMapToString(actualHeaders)
 
 	for expectedKey, expectedValues := range expectedHeaders {
 		if _, ok := actualHeaders[expectedKey]; !ok {
 			return TestResult{
-				Successful: false,
-				Result: FAIL,
-				Title: title,
+				Successful:   false,
+				Result:       FAIL,
+				Title:        title,
 				ResourceType: typeS,
-				ResourceId: id,
-				TestType: Header,
-				Property: property,
-				Err: nil,
-				Human: "Did not find header " + expectedKey + " got \n" + actualString,
-				Expected: []string{expectedKey},
-				Found: []string{actualString},
+				ResourceId:   id,
+				TestType:     Header,
+				Property:     property,
+				Err:          nil,
+				Human:        "Did not find header " + expectedKey + " got \n" + actualString,
+				Expected:     []string{expectedKey},
+				Found:        []string{actualString},
 			}
 		}
 
@@ -137,14 +138,14 @@ func validateHeader(res ResourceRead, property string, expectedHeaders map[strin
 					Successful:   false,
 					Result:       FAIL,
 					ResourceType: typeS,
-					ResourceId: id,
+					ResourceId:   id,
 					TestType:     Header,
-					Title:		  title,
+					Title:        title,
 					Property:     property,
 					Err:          nil,
 					Human:        "Did not find header " + expectedKey + ": " + expectedValue,
 					Expected:     []string{expectedValue},
-					Found: 		  []string{actualString},
+					Found:        []string{actualString},
 				}
 			}
 		}
@@ -152,12 +153,22 @@ func validateHeader(res ResourceRead, property string, expectedHeaders map[strin
 
 	return TestResult{
 		Successful:   true,
-		Title:		  title,
+		Title:        title,
 		ResourceId:   id,
 		Result:       SUCCESS,
 		ResourceType: typeS,
 		TestType:     Header,
 	}
+}
+
+func convertHeaderMapToString(actualHeaders system.Header) string {
+	var actualString string
+	for k, values := range actualHeaders {
+		for _, v := range values {
+			actualString += k + ": " + v + "\n"
+		}
+	}
+	return actualString
 }
 
 func isInStringSlice(haystack []string, needle string) bool {

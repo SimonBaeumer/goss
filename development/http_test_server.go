@@ -7,11 +7,12 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	for k, v := range r.Header {
-		fmt.Println("key:", k, "val:", v)
+	for k, values := range r.Header {
+		for _, value := range values {
+			fmt.Println("key:", k, "val:", value)
+		}
 	}
 
-	w.Header().Add("key", "value")
 	w.Header().Add("key", "value")
 }
 
