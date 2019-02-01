@@ -6,6 +6,7 @@ import (
 	"github.com/SimonBaeumer/goss/resource"
 )
 
+// GossConfig represents the complete goss config file
 type GossConfig struct {
 	Files        resource.FileMap        `json:"file,omitempty" yaml:"file,omitempty"`
 	Packages     resource.PackageMap     `json:"package,omitempty" yaml:"package,omitempty"`
@@ -25,6 +26,7 @@ type GossConfig struct {
 	Matchings    resource.MatchingMap    `json:"matching,omitempty" yaml:"matching,omitempty"`
 }
 
+// NewGossConfig is the constructor function
 func NewGossConfig() *GossConfig {
 	return &GossConfig{
 		Files:        make(resource.FileMap),

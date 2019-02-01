@@ -57,6 +57,7 @@ func extractHeaderArgument(headerArg string) map[string][]string {
 	return headers
 }
 
+// AddResource adds a resource to the configuration file
 func AddResource(fileName string, gossConfig GossConfig, resourceName, key string, c *cli.Context, config util.Config, sys *system.System) error {
 	// Need to figure out a good way to refactor this
 	switch resourceName {
@@ -199,6 +200,7 @@ func AutoAddResources(fileName string, keys []string, c *cli.Context) error {
 	return nil
 }
 
+// Autoadds all resources to the config file
 func AutoAddResource(fileName string, gossConfig GossConfig, key string, c *cli.Context, config util.Config, sys *system.System) error {
 	// file
 	if strings.Contains(key, "/") {
