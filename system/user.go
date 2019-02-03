@@ -18,18 +18,22 @@ type User interface {
 	Shell() (string, error)
 }
 
+// DefUser represents a user in the system package
 type DefUser struct {
 	username string
 }
 
+// NewDefUser is the constructor for creating a new user
 func NewDefUser(username string, system *System, config util.Config) User {
 	return &DefUser{username: username}
 }
 
+//Username returns the username
 func (u *DefUser) Username() string {
 	return u.username
 }
 
+//Exists checks if a user exists on the system
 func (u *DefUser) Exists() (bool, error) {
 	_, err := user.LookupUser(u.username)
 	if err != nil {
@@ -38,6 +42,7 @@ func (u *DefUser) Exists() (bool, error) {
 	return true, nil
 }
 
+//UID returns the UID by username
 func (u *DefUser) UID() (int, error) {
 	user, err := user.LookupUser(u.username)
 	if err != nil {
@@ -47,6 +52,7 @@ func (u *DefUser) UID() (int, error) {
 	return user.Uid, nil
 }
 
+// GID returns the group id for the user
 func (u *DefUser) GID() (int, error) {
 	user, err := user.LookupUser(u.username)
 	if err != nil {

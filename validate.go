@@ -60,6 +60,7 @@ func getOutputer(c *cli.Context) outputs.Outputer {
 	return outputs.GetOutputer(c.String("format"))
 }
 
+// Validate validation runtime
 func Validate(c *cli.Context, startTime time.Time) {
 
 	outputConfig := util.OutputConfig{

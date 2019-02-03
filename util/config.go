@@ -8,6 +8,7 @@ import (
 	"github.com/oleiade/reflections"
 )
 
+// Config type is a helper type which holds the configuration of the given resource
 type Config struct {
 	IgnoreList        []string
 	Timeout           int
@@ -35,6 +36,7 @@ const (
 	YAML format = "yaml"
 )
 
+// ValidateSections validates the sections of the config file
 func ValidateSections(unmarshal func(interface{}) error, i interface{}, whitelist map[string]bool) error {
 	// Get generic input
 	var toValidate map[string]map[string]interface{}
@@ -68,6 +70,7 @@ func WhitelistAttrs(i interface{}, format format) (map[string]bool, error) {
 	return validAttrs, nil
 }
 
+// IsValueInList checks if a value is in the string slice
 func IsValueInList(value string, list []string) bool {
 	for _, v := range list {
 		if strings.ToLower(v) == strings.ToLower(value) {
