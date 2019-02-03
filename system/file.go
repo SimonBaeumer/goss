@@ -61,6 +61,7 @@ func (f *DefFile) Path() string {
 	return f.path
 }
 
+// Exists checks if the file exists
 func (f *DefFile) Exists() (bool, error) {
 	if err := f.setup(); err != nil {
 		return false, err
@@ -100,6 +101,7 @@ func (f *DefFile) Mode() (string, error) {
 	return mode, nil
 }
 
+// Size returns the size in bytes
 func (f *DefFile) Size() (int, error) {
 	if err := f.setup(); err != nil {
 		return 0, err
@@ -114,6 +116,7 @@ func (f *DefFile) Size() (int, error) {
 	return int(size), nil
 }
 
+// Filetype returns the file type
 func (f *DefFile) Filetype() (string, error) {
 	if err := f.setup(); err != nil {
 		return "", err

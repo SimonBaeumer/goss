@@ -8,8 +8,10 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+// Header is an alias for the header type
 type Header map[string][]string
 
+// HTTP defines the interface to access the request data
 type HTTP interface {
 	HTTP() string
 	Status() (int, error)
@@ -20,6 +22,7 @@ type HTTP interface {
 	Headers() (Header, error)
 }
 
+// DefHTTP is the system package representation
 type DefHTTP struct {
 	http              string
 	allowInsecure     bool
@@ -33,6 +36,7 @@ type DefHTTP struct {
 	RequestHeaders    Header
 }
 
+// NewDefHTTP is the constructor of the DefHTTP struct
 func NewDefHTTP(http string, system *System, config util.Config) HTTP {
 	return &DefHTTP{
 		http:              http,
@@ -86,6 +90,7 @@ func (u *DefHTTP) setup() error {
 	return u.err
 }
 
+//
 func (u *DefHTTP) Exists() (bool, error) {
 	if _, err := u.Status(); err != nil {
 		return false, err
@@ -93,21 +98,27 @@ func (u *DefHTTP) Exists() (bool, error) {
 	return true, nil
 }
 
+// SetNoFollowRedirects disables the go default to follow redirect links
 func (u *DefHTTP) SetNoFollowRedirects(t bool) {
 	u.noFollowRedirects = t
 }
 
+// SetAllowInsecure allows bad ssl certificates
 func (u *DefHTTP) SetAllowInsecure(t bool) {
 	u.allowInsecure = t
 }
 
+// ID returns the id of the http resource
 func (u *DefHTTP) ID() string {
 	return u.http
 }
+
+// HTTP returns the url
 func (u *DefHTTP) HTTP() string {
 	return u.http
 }
 
+// Status returns the http status code
 func (u *DefHTTP) Status() (int, error) {
 	if err := u.setup(); err != nil {
 		return 0, err
@@ -116,6 +127,7 @@ func (u *DefHTTP) Status() (int, error) {
 	return u.resp.StatusCode, nil
 }
 
+// Body returns the body of the http response
 func (u *DefHTTP) Body() (io.Reader, error) {
 	if err := u.setup(); err != nil {
 		return nil, err
@@ -124,6 +136,7 @@ func (u *DefHTTP) Body() (io.Reader, error) {
 	return u.resp.Body, nil
 }
 
+// Headers returns the headers of the response
 func (u *DefHTTP) Headers() (Header, error) {
 	if err := u.setup(); err != nil {
 		return nil, err

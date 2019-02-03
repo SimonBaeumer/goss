@@ -18,6 +18,7 @@ type User interface {
 	Shell() (string, error)
 }
 
+// DefUser represents a user in the system package
 type DefUser struct {
 	username string
 }
@@ -51,6 +52,7 @@ func (u *DefUser) UID() (int, error) {
 	return user.Uid, nil
 }
 
+// GID returns the group id for the user
 func (u *DefUser) GID() (int, error) {
 	user, err := user.LookupUser(u.username)
 	if err != nil {

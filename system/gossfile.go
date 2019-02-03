@@ -11,6 +11,7 @@ type DefGossfile struct {
 	path string
 }
 
+// Path returns the path to the goss file
 func (g *DefGossfile) Path() string {
 	return g.path
 }
