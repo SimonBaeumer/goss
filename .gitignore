@@ -5,7 +5,6 @@
 /release
 /integration-tests/goss/goss
 /integration-tests/**/*-generated*
-/vendor/
 /integration-tests/**/goss-linux-386
 /integration-tests/**/goss-linux-amd64
 development/http_test_server
