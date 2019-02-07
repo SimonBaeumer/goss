@@ -93,7 +93,7 @@ test-all: lint test test-int
 
 deps:
 	$(info INFO: Starting build $@)
-	dep ensure
+	go mod vendor
 
 gen:
 	$(info INFO: Starting build $@)
