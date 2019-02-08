@@ -1,4 +1,4 @@
-export GO15VENDOREXPERIMENT=1
+export GO111MODULE=on
 
 exe = github.com/SimonBaeumer/goss/cmd/goss
 pkgs = $(shell ./novendor.sh)
@@ -93,7 +93,7 @@ test-all: lint test test-int
 
 deps:
 	$(info INFO: Starting build $@)
-	dep ensure
+	go mod vendor
 
 gen:
 	$(info INFO: Starting build $@)
