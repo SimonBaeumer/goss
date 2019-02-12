@@ -195,7 +195,9 @@ func AutoAddResources(fileName string, keys []string, c *cli.Context) error {
 			return err
 		}
 	}
-	WriteJSON(fileName, gossConfig)
+	if err := WriteJSON(fileName, gossConfig); err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -3,8 +3,13 @@ language: go
 env:
   - GO111MODULE=on
 
+stages:
+  - security
+  - test
+  - deploy
+
 go:
-- 1.11.x
+  - 1.11.x
 
 sudo: required
 dist: trusty
@@ -14,22 +19,48 @@ services:
 
 before_install:
 - go get -u golang.org/x/lint/golint
+- go get github.com/securego/gosec/cmd/gosec
 - DEP_RELEASE_TAG=0.5.0 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
-script:
 - make deps
-- make
 
-deploy:
-  provider: releases
-  api_key:
-    secure: R73iTnRhJluCStXFLhyz6BEvqXi1eURGF7yImUwyrBFhbJWToA6JTclp0zcQcC7OyheEJ5OyttCnobObO4h1+4qYT9xgSDr91B2M61AzbPwUzLVGaCcSI16+rlnWNF4Q0yyRMk9rKloYXhxv3bXu3AKYlSaiQpFIIO4ovsneBYKPIQCqlq0crx4Gzh4RLonfJ305f53BiNCc8NvxFa2nJVmXs17IbuSdfKEPrgUwbwIKhJKHPwuTR3cWWbSOFkxE5rkVg52AYhWjk84uKHy3aOUW8vIqRK2FKaNoNgb9vNc7A+r8q5WSK3U05BM0pqWRV+z8N6SMeoMPMrktCtWjJHQB3nPs1SoYzL+UdnZFrcAMFvwKXxqNxa0xyxXohisZr2zA3K8KfU3q/w9hilv4M9YRLLsyWT3J185lgRjBExlcVTH9RDZ59o3pM1YEdEUZG/ARgU4jqwJpdAd4WasSRwlWZl0RlFjCWzob7IpvBPWvycg9R0cy3c5UuVLINPaHRjtJZTev814+JbZYKvqrGjNYRsjGjO47T1Lk3czSD1/HQ/XnFac4PrSzugJrIFVatJ9NU2rrrT9azFtk4kfxlNMTHWGqUMJ0qSLjtMavfvo5WjfJXiwEAWuwCT410H4j53jXPvZnbKi+4f3Eogdi8B+/XdcVuSeqw0KZDKwhUn8=
-  file:
-    - release/goss-linux-amd64
-    - release/goss-linux-386
-    - release/goss-linux-arm
-    - extras/dgoss/dgoss
-  skip_cleanup: true
-  on:
-    repo: SimonBaeumer/goss
-    tags: true
+jobs:
+  include:
+    - stage: security
+      name: "Security checks"
+      script: make sec || true
+      allow_failure: true # Does not work at the moment in travis-ci?
+    - stage: test
+      name: "Go lint"
+      script: make lint
+    - stage: test
+      name: "Run unit tests"
+      script: make test
+    - stage: test
+      name: "Integration tests 64-bit"
+      script: make test-int
+    - stage: test
+      name: "Integration test 32-bit"
+      script: make test-int-32
+    - stage: deploy
+      name: "Deployment"
+      if: tag IS present
+      deploy:
+        script: skip
+        provider: releases
+        api_key:
+          secure: R73iTnRhJluCStXFLhyz6BEvqXi1eURGF7yImUwyrBFhbJWToA6JTclp0zcQcC7OyheEJ5OyttCnobObO4h1+4qYT9xgSDr91B2M61AzbPwUzLVGaCcSI16+rlnWNF4Q0yyRMk9rKloYXhxv3bXu3AKYlSaiQpFIIO4ovsneBYKPIQCqlq0crx4Gzh4RLonfJ305f53BiNCc8NvxFa2nJVmXs17IbuSdfKEPrgUwbwIKhJKHPwuTR3cWWbSOFkxE5rkVg52AYhWjk84uKHy3aOUW8vIqRK2FKaNoNgb9vNc7A+r8q5WSK3U05BM0pqWRV+z8N6SMeoMPMrktCtWjJHQB3nPs1SoYzL+UdnZFrcAMFvwKXxqNxa0xyxXohisZr2zA3K8KfU3q/w9hilv4M9YRLLsyWT3J185lgRjBExlcVTH9RDZ59o3pM1YEdEUZG/ARgU4jqwJpdAd4WasSRwlWZl0RlFjCWzob7IpvBPWvycg9R0cy3c5UuVLINPaHRjtJZTev814+JbZYKvqrGjNYRsjGjO47T1Lk3czSD1/HQ/XnFac4PrSzugJrIFVatJ9NU2rrrT9azFtk4kfxlNMTHWGqUMJ0qSLjtMavfvo5WjfJXiwEAWuwCT410H4j53jXPvZnbKi+4f3Eogdi8B+/XdcVuSeqw0KZDKwhUn8=
+        file:
+          - release/goss-linux-amd64
+          - release/goss-linux-386
+          - release/goss-linux-arm
+          - extras/dgoss/dgoss
+        skip_cleanup: true
+        on:
+          repo: SimonBaeumer/goss
+          tags: true
+
+
+#script:
+#- make deps
+#- make sec
+#- make

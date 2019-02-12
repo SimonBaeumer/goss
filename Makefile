@@ -20,8 +20,7 @@ test:
 
 lint:
 	$(info INFO: Starting build $@)
-	#go tool vet .
-	golint $(pkgs) | grep -v 'unexported' || true
+	go test ./...
 
 bench:
 	$(info INFO: Starting build $@)
@@ -94,6 +93,10 @@ test-all: lint test test-int
 deps:
 	$(info INFO: Starting build $@)
 	go mod vendor
+
+sec:
+	$(info INFO: Starting build $@)
+	gosec ./...
 
 gen:
 	$(info INFO: Starting build $@)
