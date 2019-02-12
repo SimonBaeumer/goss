@@ -7,7 +7,6 @@ stages:
   - security
   - test
   - deploy
-    if: tag IS present
 
 go:
   - 1.11.x
@@ -29,6 +28,7 @@ jobs:
     - stage: security
       name: "Run security tests..."
       script: make sec
+      allow_failure: true
     - stage: test
       name: "Run go lint..."
       script: make lint
@@ -43,6 +43,7 @@ jobs:
       script: make test-int32
     - stage: deploy
       name: "Run deployment"
+      if: tag IS present
       deploy:
         script: skip
         provider: releases
