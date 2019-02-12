@@ -10,12 +10,7 @@ stages:
     if: tag IS present
 
 go:
-- 1.11.x
-- master
-
-cache:
-  directories:
-    -
+  - 1.11.x
 
 sudo: required
 dist: trusty
