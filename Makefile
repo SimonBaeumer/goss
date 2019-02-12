@@ -95,6 +95,10 @@ deps:
 	$(info INFO: Starting build $@)
 	go mod vendor
 
+sec:
+	$(info INFO: Starting build $@)
+	gosec ./...
+
 gen:
 	$(info INFO: Starting build $@)
 	go generate -tags genny $(pkgs)

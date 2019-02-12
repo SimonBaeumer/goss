@@ -42,7 +42,10 @@ func (a *DefAddr) Reachable() (bool, error) {
 	if err != nil {
 		return false, nil
 	}
-	conn.Close()
+
+	if err = conn.Close(); err != nil {
+		return false, err
+	}
 	return true, nil
 }
 

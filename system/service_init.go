@@ -50,8 +50,12 @@ func (s *ServiceInit) Running() (bool, error) {
 	if invalidService(s.service) {
 		return false, nil
 	}
+
 	cmd := util.NewCommand("service", s.service, "status")
-	cmd.Run()
+	if err := cmd.Run(); err != nil {
+		return false, err
+	}
+
 	if cmd.Status == 0 {
 		return true, cmd.Err
 	}
