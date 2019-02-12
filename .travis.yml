@@ -26,23 +26,23 @@ before_install:
 jobs:
   include:
     - stage: security
-      name: "Run security tests..."
+      name: "Security checks"
       script: make sec || true
       allow_failure: true # Does not work at the moment in travis-ci?
     - stage: test
-      name: "Run go lint..."
+      name: "Go lint"
       script: make lint
     - stage: test
       name: "Run unit tests"
       script: make test
     - stage: test
-      name: "Run integration tests 64-bit"
+      name: "Integration tests 64-bit"
       script: make test-int
     - stage: test
-      name: "Run integration tests 32-bit"
-      script: make test-int32
+      name: "Integration test 32-bit"
+      script: make test-int-32
     - stage: deploy
-      name: "Run deployment"
+      name: "Deployment"
       if: tag IS present
       deploy:
         script: skip
