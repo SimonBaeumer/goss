@@ -70,11 +70,7 @@ func (s *ServiceUpstart) Enabled() (bool, error) {
 
 func (s *ServiceUpstart) Running() (bool, error) {
 	cmd := util.NewCommand("service", s.service, "status")
-	err := cmd.Run()
-	if err != nil {
-		return false, err
-	}
-
+	cmd.Run()
 	out := cmd.Stdout.String()
 	if cmd.Status == 0 && (strings.Contains(out, "running") || strings.Contains(out, "online")) {
 		return true, cmd.Err
