@@ -23,16 +23,12 @@ before_install:
 - DEP_RELEASE_TAG=0.5.0 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 - make deps
 
-security-check:
-  script: make sec
-  allow_failure: true
-
 jobs:
   include:
     - stage: security
       name: "Run security tests..."
-      script: make sec
-      allow_failure: true
+      script: make sec || true
+      allow_failure: true # Does not work at the moment in travis-ci?
     - stage: test
       name: "Run go lint..."
       script: make lint
