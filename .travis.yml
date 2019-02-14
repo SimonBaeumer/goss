@@ -3,6 +3,10 @@ language: go
 env:
   - GO111MODULE=on
 
+cache:
+  directories:
+    - vendor
+
 stages:
   - security
   - test
@@ -41,11 +45,28 @@ jobs:
     - stage: test
       name: "Integration test 32-bit"
       script: make test-int-32
+
     - stage: test
-      name: "Integration test new"
+      env:
+        - GOSS_TEST_OS=centos7
+      name: "Integration centos7 64-bit"
       script:
-        - cd integration/centos7 && docker-compose up -d
-        - docker run -it centos7_app_1 goss -g /root/test_all.yml
+        - make integration-new
+
+    - stage: test
+      name: "Integration ubuntu18.04 64-bit"
+      env:
+        - GOSS_TEST_OS=ubuntu1804
+      script:
+        - make integration-new
+
+    - stage: test
+      name: "Integration ubuntu16.04"
+      env:
+        - GOSS_TEST_OS=ubuntu1604
+      script:
+        - make integration-new
+
     - stage: deploy
       name: "Deployment"
       if: tag IS present
@@ -63,9 +84,3 @@ jobs:
         on:
           repo: SimonBaeumer/goss
           tags: true
-
-
-#script:
-#- make deps
-#- make sec
-#- make
