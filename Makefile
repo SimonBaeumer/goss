@@ -86,7 +86,7 @@ arch: build
 	$(info INFO: Starting build $@)
 	cd integration-tests/ && ./test.sh arch amd64
 
-integration-new:
+integration-new: build
 	$(info INFO: Starting build $@)
 	cd integration/${GOSS_TEST_OS} && docker-compose up -d --build > /dev/null
 	docker exec ${GOSS_TEST_OS}_app_1 goss -g /root/goss-tests/test_all.yaml validate
