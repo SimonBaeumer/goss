@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  app:
+    build: .
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - ./../../release/goss-linux-amd64:/usr/bin/goss
+      - ./../tests:/root/goss-tests
+    networks:
+      testing:
+        ipv4_address: 172.21.0.2
+
+networks:
+  testing:
+    driver: bridge
+    ipam:
+      config:
+       - subnet: 172.21.0.0/24

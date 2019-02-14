@@ -41,6 +41,11 @@ jobs:
     - stage: test
       name: "Integration test 32-bit"
       script: make test-int-32
+    - stage: test
+      name: "Integration test new"
+      script:
+        - cd integration/centos7 && docker-compose up -d
+        - docker run -it centos7_app_1 goss -g /root/test_all.yml
     - stage: deploy
       name: "Deployment"
       if: tag IS present

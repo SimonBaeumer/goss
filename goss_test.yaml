@@ -1,0 +1,3 @@
+http:
+  http://google.com:
+    status: 200

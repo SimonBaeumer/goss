@@ -1,0 +1,7 @@
+package:
+  vi:
+    installed: false
+  systemd:
+    installed: true
+    versions:
+      - "219"

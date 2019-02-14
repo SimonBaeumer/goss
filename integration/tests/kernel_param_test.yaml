@@ -1,0 +1,3 @@
+kernel-param:
+  kernel.ostype:
+    value: Linux

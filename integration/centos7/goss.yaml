@@ -1,0 +1,34 @@
+package:
+  systemd:
+    installed: true
+    versions:
+    - 237-3ubuntu10.11
+  vi:
+    installed: false
+user:
+  root:
+    exists: true
+    uid: 0
+    gid: 0
+    groups:
+    - root
+    home: /root
+    shell: /bin/bash
+command:
+  echo 'hello-world':
+    exit-status: 0
+    stdout:
+    - hello-world
+    stderr: []
+    timeout: 10000
+  invalid:
+    exit-status: 127
+    stdout: []
+    stderr:
+    - 'sh: 1: invalid: not found'
+    timeout: 10000
+  test:
+    exit-status: 1
+    stdout: []
+    stderr: []
+    timeout: 10000

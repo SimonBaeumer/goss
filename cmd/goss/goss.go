@@ -15,6 +15,12 @@ import (
 var version string
 
 func main() {
+	app := CreateApp()
+
+	runApp(app)
+}
+
+func CreateApp() *cli.App {
 	startTime := time.Now()
 	app := cli.NewApp()
 	app.EnableBashCompletion = true
@@ -287,15 +293,15 @@ func main() {
 							Value: 5 * time.Second,
 						},
 						cli.StringFlag{
-							Name: "username, u",
+							Name:  "username, u",
 							Usage: "Username for basic auth",
 						},
 						cli.StringFlag{
-							Name: "password, p",
+							Name:  "password, p",
 							Usage: "Password for basic auth",
 						},
 						cli.StringFlag{
-							Name: "header",
+							Name:  "header",
 							Usage: "Set-Cookie: Value",
 						},
 					},
@@ -339,7 +345,10 @@ func main() {
 			},
 		},
 	}
+	return app
+}
 
+func runApp(app *cli.App) {
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

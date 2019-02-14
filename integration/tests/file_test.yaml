@@ -1,0 +1,19 @@
+file:
+  /lib64:
+    exists: true
+    mode: "0777"
+    size: 9
+    owner: root
+    group: root
+    linked-to: usr/lib64
+    filetype: symlink
+    contains: []
+  /root/.bashrc:
+    exists: true
+    mode: "0644"
+    size: 176
+    owner: root
+    group: root
+    filetype: file
+    contains:
+      - "User specific aliases and function"

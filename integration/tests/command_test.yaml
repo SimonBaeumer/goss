@@ -1,0 +1,14 @@
+command:
+  echo 'hello-world':
+    exit-status: 0
+    stdout:
+      - hello-world
+    stderr: []
+    timeout: 10000
+
+  invalid:
+    exit-status: 127
+    stdout: []
+    stderr:
+      - 'sh: invalid: command not found'
+    timeout: 10000

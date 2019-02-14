@@ -1,0 +1,4 @@
+group:
+  root:
+    exists: true
+    gid: 0

@@ -1,0 +1,6 @@
+interface:
+  eth0:
+    exists: true
+    addrs:
+      - 172.21.0.2/24
+    mtu: 1500
