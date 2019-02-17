@@ -7,3 +7,12 @@ user:
       - root
     home: /root
     shell: /bin/bash
+  test-user:
+    exists: true
+    uid: 1000
+    gid: 1001
+    groups:
+      - test-user
+    home: /home/test-user
+    shell: /bin/sh
+

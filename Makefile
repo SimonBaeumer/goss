@@ -86,11 +86,25 @@ arch: build
 	$(info INFO: Starting build $@)
 	cd integration-tests/ && ./test.sh arch amd64
 
-integration-new: build
+
+
+integration-fixtures:
 	$(info INFO: Starting build $@)
-	cd integration/${GOSS_TEST_OS} && docker-compose up -d --build > /dev/null
-	docker exec ${GOSS_TEST_OS}_app_1 goss -g /root/goss-tests/test_all.yaml validate
-	cd integration/${GOSS_TEST_OS} && docker-compose down
+	docker exec ${GOSS_TEST_OS}_app_1 /tests/prepare.sh
+
+integration-start: build
+	$(info INFO: Starting build $@)
+	cd integration/docker/${GOSS_TEST_OS} && docker-compose up -d --build > /dev/null
+
+integration-test: integration-start
+	$(info INFO: Starting build $@)
+	docker exec ${GOSS_TEST_OS}_app_1 goss -g /tests/tests/test_all.yaml validate
+
+integration-clean:
+	$(info INFO: Starting build $@)
+	cd integration/docker/${GOSS_TEST_OS} && docker-compose down
+
+integration-all: integration-start integration-fixtures integration-test integration-clean
 
 test-all-32: lint test test-int-32
 test-all: lint test test-int

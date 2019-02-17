@@ -1,19 +1,19 @@
 file:
-  /lib64:
+  /symlink:
     exists: true
     mode: "0777"
-    size: 9
+    size: 14
     owner: root
     group: root
-    linked-to: usr/lib64
+    linked-to: /tmp/test-file
     filetype: symlink
     contains: []
-  /root/.bashrc:
+  /tmp/test-file:
     exists: true
     mode: "0644"
-    size: 176
+    size: 13
     owner: root
     group: root
     filetype: file
-    contains:
-      - "User specific aliases and function"
+    contains: []
+

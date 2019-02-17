@@ -8,7 +8,7 @@ cache:
     - vendor
 
 stages:
-  - security
+  - static-analysis
   - test
   - deploy
 
@@ -29,19 +29,23 @@ before_install:
 
 jobs:
   include:
-    - stage: security
+    - stage: static-analysis
+      name: "Go lint"
+      script: make lint
+
+    - stage: static-analysis
       name: "Security checks"
       script: make sec || true
       allow_failure: true # Does not work at the moment in travis-ci?
+
     - stage: test
-      name: "Go lint"
-      script: make lint
-    - stage: test
-      name: "Run unit tests"
+      name: "Unit tests"
       script: make test
+
     - stage: test
       name: "Integration tests 64-bit"
       script: make test-int
+
     - stage: test
       name: "Integration test 32-bit"
       script: make test-int-32
@@ -61,9 +65,16 @@ jobs:
         - make integration-new
 
     - stage: test
-      name: "Integration ubuntu16.04"
+      name: "Integration ubuntu16.04 64-bit"
       env:
         - GOSS_TEST_OS=ubuntu1604
+      script:
+        - make integration-new
+
+    - stage: test
+      name: "Integration debian8 64-bit"
+      env:
+        - GOSS_TEST_OS=debian8
       script:
         - make integration-new
 

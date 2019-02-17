@@ -2,3 +2,6 @@ group:
   root:
     exists: true
     gid: 0
+  test-group:
+    exists: true
+    gid: 1000
