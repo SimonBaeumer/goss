@@ -1,4 +1,4 @@
-package main
+package http
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func httpHandler(w http.ResponseWriter, r *http.Request) {
 	for k, values := range r.Header {
 		for _, value := range values {
 			fmt.Println("key:", k, "val:", value)
@@ -17,7 +17,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", httpHandler)
 	err := http.ListenAndServe(":9090", nil)
 
 	if err != nil {
