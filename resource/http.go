@@ -1,9 +1,11 @@
 package resource
 
 import (
-    "github.com/SimonBaeumer/goss/system"
+	"crypto/tls"
+	"github.com/SimonBaeumer/goss/system"
     "github.com/SimonBaeumer/goss/util"
-    "reflect"
+	"log"
+	"reflect"
     "strings"
     "time"
 )
@@ -23,6 +25,8 @@ type HTTP struct {
 	Password          string   			  	`json:"password,omitempty" yaml:"password,omitempty"`
 	Headers			  map[string][]string   `json:"headers,omitempty" yaml:"headers,omitempty"`
 	RequestHeaders 	  map[string][]string   `json:"request-headers,omitempty" yaml:"request-headers,omitempty"`
+	Cert              string                `json:"cert,omitempty" yaml:"cert,omitempty"`
+	Key               string                `json:"key,omitempty" yaml:"key,omitempty"`
 }
 
 func (u *HTTP) ID() string      { return u.HTTP }
@@ -35,12 +39,13 @@ func (u *HTTP) Validate(sys *system.System) []TestResult {
 	skip := false
 
 	conf := util.Config{
-		AllowInsecure: u.AllowInsecure,
+		AllowInsecure:     u.AllowInsecure,
 		NoFollowRedirects: u.NoFollowRedirects,
-		Timeout: u.Timeout,
-		Username: u.Username,
-		Password: u.Password,
-		RequestHeaders: u.RequestHeaders,
+		Timeout:           u.Timeout,
+		Username:          u.Username,
+		Password:          u.Password,
+		RequestHeaders:    u.RequestHeaders,
+		Certificate:       u.loadClientCertificate(),
 	}
 
 	sysHTTP := sys.NewHTTP(
@@ -67,6 +72,18 @@ func (u *HTTP) Validate(sys *system.System) []TestResult {
 	}
 
 	return results
+}
+
+func (u *HTTP) loadClientCertificate() tls.Certificate {
+    if u.Cert == "" || u.Key == "" {
+        return tls.Certificate{}
+    }
+
+	cert, err := tls.LoadX509KeyPair(u.Cert, u.Key)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return cert
 }
 
 func NewHTTP(sysHTTP system.HTTP, config util.Config) (*HTTP, error) {

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"crypto/tls"
 	"fmt"
 	"reflect"
 	"strings"
@@ -19,6 +20,7 @@ type Config struct {
 	Password          string
 	Header            map[string][]string
 	RequestHeaders    map[string][]string
+	Certificate       tls.Certificate
 }
 
 type Request struct {

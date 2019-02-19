@@ -578,7 +578,9 @@ http:
     body: [] # Check http response content for these patterns
     username: "" # username for basic auth
     password: "" # password for basic auth
-    headers: # Check for http headers, is not support for add command
+    cert: /home/example/client.crt # Client certificate file which can be used for cert authentication
+    key: /home/example/client.key # Client private key file
+    headers: # Check for http headers
       key:
         - value
         - another value

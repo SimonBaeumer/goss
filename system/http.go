@@ -2,10 +2,10 @@ package system
 
 import (
 	"crypto/tls"
+	"github.com/SimonBaeumer/goss/util"
 	"io"
 	"net/http"
 	"time"
-	"github.com/SimonBaeumer/goss/util"
 )
 
 // Header is an alias for the header type
@@ -34,6 +34,7 @@ type DefHTTP struct {
 	Username          string
 	Password          string
 	RequestHeaders    Header
+	ClientCertificate tls.Certificate
 }
 
 // NewDefHTTP is the constructor of the DefHTTP struct
@@ -46,6 +47,7 @@ func NewDefHTTP(http string, system *System, config util.Config) HTTP {
 		Username:		   config.Username,
 		Password:          config.Password,
 		RequestHeaders:    config.RequestHeaders,
+		ClientCertificate: config.Certificate,
 	}
 }
 
@@ -56,8 +58,12 @@ func (u *DefHTTP) setup() error {
 	}
 	u.loaded = true
 
-	tr := &http.Transport{
-		TLSClientConfig:   &tls.Config{InsecureSkipVerify: u.allowInsecure},
+
+    tr := &http.Transport{
+		TLSClientConfig:   &tls.Config{
+			InsecureSkipVerify: u.allowInsecure,
+            Certificates: []tls.Certificate{u.ClientCertificate},
+	    },
 		DisableKeepAlives: true,
 	}
 	client := &http.Client{
@@ -90,7 +96,7 @@ func (u *DefHTTP) setup() error {
 	return u.err
 }
 
-//
+// Exists checks if the given uri is reachable
 func (u *DefHTTP) Exists() (bool, error) {
 	if _, err := u.Status(); err != nil {
 		return false, err
