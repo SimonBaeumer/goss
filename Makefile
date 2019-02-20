@@ -44,8 +44,6 @@ release/goss-linux-arm: $(GO_FILES)
 	$(info INFO: Starting build $@)
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -ldflags "-X main.version=$(TRAVIS_TAG) -s -w" -o release/$(cmd)-linux-arm $(exe)
 
-
-
 release:
 	$(MAKE) clean
 	$(MAKE) build
@@ -89,6 +87,10 @@ arch: build
 
 test-all-32: lint test test-int-32
 test-all: lint test test-int
+
+test-dgoss:
+	$(info INFO: Starting build $@)
+	cd extras/dgoss/tests; ./dgoss-test.sh
 
 deps:
 	$(info INFO: Starting build $@)
