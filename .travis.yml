@@ -20,7 +20,6 @@ services:
 before_install:
 - go get -u golang.org/x/lint/golint
 - go get github.com/securego/gosec/cmd/gosec
-- DEP_RELEASE_TAG=0.5.0 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 - make deps
 
 jobs:
@@ -29,18 +28,29 @@ jobs:
       name: "Security checks"
       script: make sec || true
       allow_failure: true # Does not work at the moment in travis-ci?
+
     - stage: test
       name: "Go lint"
       script: make lint
-    - stage: test
-      name: "Run unit tests"
+
+    - name: "Run unit tests"
       script: make test
-    - stage: test
-      name: "Integration tests 64-bit"
+
+    - name: "Integration tests 64-bit"
       script: make test-int
-    - stage: test
-      name: "Integration test 32-bit"
+
+    - name: "Integration test 32-bit"
       script: make test-int-32
+
+    - name: "dgoss tests"
+      before_script:
+        - sudo add-apt-repository ppa:duggan/bats --yes
+        - sudo apt-get update -qq
+        - sudo apt-get install -qq bats
+      script:
+        - make build
+        - make test-dgoss
+
     - stage: deploy
       name: "Deployment"
       if: tag IS present
@@ -58,9 +68,3 @@ jobs:
         on:
           repo: SimonBaeumer/goss
           tags: true
-
-
-#script:
-#- make deps
-#- make sec
-#- make
