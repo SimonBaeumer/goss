@@ -48,6 +48,7 @@ func NewGossConfig() *GossConfig {
 	}
 }
 
+// Resources returns a list of all resources
 func (c *GossConfig) Resources() []resource.Resource {
 	var tests []resource.Resource
 

@@ -99,13 +99,15 @@ func validate(sys *system.System, gossConfig GossConfig, maxConcurrent int) <-ch
     out := make(chan []resource.TestResult)
 	in := make(chan resource.Resource)
 
+	// Send resources to input channel
 	go func() {
-		for _, t := range gossConfig.Resources() {
-			in <- t
+		for _, res := range gossConfig.Resources() {
+			in <- res
 		}
 		close(in)
 	}()
 
+	// Read resources from input channel and validate
 	workerCount := runtime.NumCPU() * 5
 	if workerCount > maxConcurrent {
 		workerCount = maxConcurrent
@@ -115,13 +117,14 @@ func validate(sys *system.System, gossConfig GossConfig, maxConcurrent int) <-ch
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			for f := range in {
-				out <- f.Validate(sys)
+			for res := range in {
+				out <- res.Validate(sys)
 			}
 
 		}()
 	}
 
+	// Wait for the out channel to be finished, after that close it
 	go func() {
 		wg.Wait()
 		close(out)
