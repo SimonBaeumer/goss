@@ -2,14 +2,12 @@ package resource
 
 import (
 	"fmt"
+	"github.com/SimonBaeumer/goss/system"
 	"path/filepath"
 	"strconv"
-	"strings"
-
-	"github.com/SimonBaeumer/goss/system"
-	"github.com/oleiade/reflections"
 )
 
+// A Resource defines a type on which tests can be executed, i.e. http or file
 type Resource interface {
 	Validate(*system.System) []TestResult
 	SetID(string)
@@ -44,18 +42,6 @@ func deprecateAtoI(depr interface{}, desc string) interface{} {
 		panic(err)
 	}
 	return float64(i)
-}
-
-func validAttrs(i interface{}, t string) (map[string]bool, error) {
-	validAttrs := make(map[string]bool)
-	tags, err := reflections.Tags(i, t)
-	if err != nil {
-		return nil, err
-	}
-	for _, v := range tags {
-		validAttrs[strings.Split(v, ",")[0]] = true
-	}
-	return validAttrs, nil
 }
 
 func shouldSkip(results []TestResult) bool {
