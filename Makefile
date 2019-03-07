@@ -28,11 +28,7 @@ bench:
 
 coverage:
 	$(info INFO: Starting build $@)
-	go test -cover $(pkgs)
-	#go test -coverprofile=/tmp/coverage.out .
-	#go tool cover -func=/tmp/coverage.out
-	#go tool cover -html=/tmp/coverage.out -o /tmp/coverage.html
-	#xdg-open /tmp/coverage.html
+	go test -coverprofile c.out $(pkgs)
 
 release/goss-linux-386: $(GO_FILES)
 	$(info INFO: Starting build $@)
