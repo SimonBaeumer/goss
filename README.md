@@ -38,10 +38,10 @@ This will install goss and [dgoss](https://github.com/SimonBaeumer/goss/tree/mas
 
 ```bash
 # Install latest version to /usr/local/bin
-curl -fsSL https://goss.rocks/install | sh
+curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/goss/add-coverage/install.sh | sh
 
-# Install v0.3.6 version to ~/bin
-curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.6 GOSS_DST=~/bin sh
+# Install v0.4.0 version to ~/bin
+curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/goss/add-coverage/install.sh | GOSS_VER=v0.4.0 GOSS_DST=~/bin sh
 ```
 
 ### Manual installation

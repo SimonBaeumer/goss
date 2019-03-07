@@ -1,8 +1,9 @@
 language: go
 
 env:
-  - GO111MODULE=on
-  - CC_TEST_REPORTER_ID=e0a73033ac8d1dfa04a23fdf69f14e0c6875bf07ab37c83d72ab60bf4913cbcb
+  global:
+    - GO111MODULE=on
+    - CC_TEST_REPORTER_ID=e0a73033ac8d1dfa04a23fdf69f14e0c6875bf07ab37c83d72ab60bf4913cbcb
 
 stages:
   - security
