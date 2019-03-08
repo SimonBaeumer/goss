@@ -1,9 +1,8 @@
 #!/bin/sh
 
-{
 set -e
 
-LATEST="v0.3.6"
+LATEST=$(curl -s https://api.github.com/repos/SimonBaeumer/goss/releases/latest | jq -r .tag_name)
 DGOSS_VER=$GOSS_VER
 
 if [ -z "$GOSS_VER" ]; then
@@ -38,4 +37,3 @@ echo "Downloading $dgoss_url"
 curl -L "$dgoss_url" -o "$DGOSS_INSTALL_LOC"
 chmod +rx "$DGOSS_INSTALL_LOC"
 echo "dgoss $DGOSS_VER has been installed to $DGOSS_INSTALL_LOC"
-}

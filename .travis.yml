@@ -1,7 +1,9 @@
 language: go
 
 env:
-  - GO111MODULE=on
+  global:
+    - GO111MODULE=on
+    - CC_TEST_REPORTER_ID=e0a73033ac8d1dfa04a23fdf69f14e0c6875bf07ab37c83d72ab60bf4913cbcb
 
 stages:
   - security
@@ -34,7 +36,13 @@ jobs:
       script: make lint
 
     - name: "Run unit tests"
-      script: make test
+      before_script:
+        - curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-0.6.3-linux-amd64 --output test-reporter
+        - chmod +x test-reporter
+        - ./test-reporter before-build
+      script: make coverage
+      after_script:
+        - ./test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
 
     - name: "Integration tests 64-bit"
       script: make test-int

@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/SimonBaeumer/goss.svg?branch=master)](https://travis-ci.org/SimonBaeumer/goss)
 [![Go Report Card](https://goreportcard.com/badge/github.com/SimonBaeumer/goss)](https://goreportcard.com/report/github.com/SimonBaeumer/goss)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4024768d424e4731012e/maintainability)](https://codeclimate.com/github/SimonBaeumer/goss/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/4024768d424e4731012e/test_coverage)](https://codeclimate.com/github/SimonBaeumer/goss/test_coverage)
 [![Github All Releases](https://img.shields.io/github/downloads/SimonBaeumer/goss/total.svg)](https://github.com/SimonBaeumer/goss/releases)
 
 ## Goss in 45 seconds
@@ -36,10 +38,10 @@ This will install goss and [dgoss](https://github.com/SimonBaeumer/goss/tree/mas
 
 ```bash
 # Install latest version to /usr/local/bin
-curl -fsSL https://goss.rocks/install | sh
+curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/goss/add-coverage/install.sh | sh
 
-# Install v0.3.6 version to ~/bin
-curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.6 GOSS_DST=~/bin sh
+# Install v0.4.0 version to ~/bin
+curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/goss/add-coverage/install.sh | GOSS_VER=v0.4.0 GOSS_DST=~/bin sh
 ```
 
 ### Manual installation
