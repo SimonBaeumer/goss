@@ -1,0 +1,25 @@
+tests:
+  run dgoss with mount strategy:
+    command: "GOSS_PATH=./../../release/goss-linux-amd64 GOSS_FILES_STRATEGY=mount ./dgoss run nginx:latest"
+    stdout:
+      contains:
+        - "Count: 1, Failed: 0, Skipped: 0"
+    stderr:
+      lines:
+        0: "INFO: Starting docker container"
+    exit-code: 0
+
+  run dgoss with cp strategy:
+    command: "GOSS_PATH=./../../release/goss-linux-amd64 GOSS_FILES_STRATEGY=cp ./dgoss run nginx:latest"
+    stdout:
+      contains:
+        - "Count: 1, Failed: 0, Skipped: 0"
+    stderr:
+      lines:
+        0: "INFO: Creating docker container"
+        1: "INFO: Copy goss files into container"
+    exit-code: 0
+
+  run dgoss with invalid goss path:
+    command: "GOSS_PATH=/invalid ./dgoss run nginx:latest"
+    exit-code: 1

@@ -6,12 +6,11 @@ env:
     - CC_TEST_REPORTER_ID=e0a73033ac8d1dfa04a23fdf69f14e0c6875bf07ab37c83d72ab60bf4913cbcb
 
 stages:
-  - security
   - test
   - deploy
 
 go:
-  - 1.11.x
+  - 1.12.x
 
 sudo: required
 dist: trusty
@@ -26,11 +25,6 @@ before_install:
 
 jobs:
   include:
-    - stage: security
-      name: "Security checks"
-      script: make sec || true
-      allow_failure: true # Does not work at the moment in travis-ci?
-
     - stage: test
       name: "Go lint"
       script: make lint
@@ -52,9 +46,7 @@ jobs:
 
     - name: "dgoss tests"
       before_script:
-        - sudo add-apt-repository ppa:duggan/bats --yes
-        - sudo apt-get update -qq
-        - sudo apt-get install -qq bats
+        - curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/commander/master/install.sh | COMMANDER_DST=~/bin sh
       script:
         - make build
         - make test-dgoss
