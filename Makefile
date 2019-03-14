@@ -86,7 +86,7 @@ test-all: lint test test-int
 
 test-dgoss:
 	$(info INFO: Starting build $@)
-	cd extras/dgoss/tests; ./dgoss-test.sh
+	cd extras/dgoss; commander test
 
 deps:
 	$(info INFO: Starting build $@)
