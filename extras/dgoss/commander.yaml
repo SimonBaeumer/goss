@@ -1,4 +1,5 @@
 config:
+  timeout: 20000 # Set timeout to 20s
   env:
     - GOSS_PATH=./../../release/goss-linux-amd64
     - GOSS_FILES_STRATEGY=mount

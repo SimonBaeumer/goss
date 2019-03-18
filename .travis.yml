@@ -46,7 +46,7 @@ jobs:
 
     - name: "dgoss tests"
       before_script:
-        - curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/commander/master/install.sh | COMMANDER_DST=~/bin sh
+        - curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/commander/master/install.sh | COMMANDER_VER=v0.2.1 COMMANDER_DST=~/bin sh
       script:
         - make build
         - make test-dgoss
