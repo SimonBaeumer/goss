@@ -1,6 +1,10 @@
+config:
+  env:
+    - GOSS_PATH=./../../release/goss-linux-amd64
+    - GOSS_FILES_STRATEGY=mount
 tests:
   run dgoss with mount strategy:
-    command: "GOSS_PATH=./../../release/goss-linux-amd64 GOSS_FILES_STRATEGY=mount ./dgoss run nginx:latest"
+    command: "./dgoss run nginx:latest"
     stdout:
       contains:
         - "Count: 1, Failed: 0, Skipped: 0"
@@ -10,7 +14,11 @@ tests:
     exit-code: 0
 
   run dgoss with cp strategy:
-    command: "GOSS_PATH=./../../release/goss-linux-amd64 GOSS_FILES_STRATEGY=cp ./dgoss run nginx:latest"
+    command: "./dgoss run nginx:latest"
+    config:
+      env:
+        - GOSS_PATH=./../../release/goss-linux-amd64
+        - GOSS_FILES_STRATEGY=cp
     stdout:
       contains:
         - "Count: 1, Failed: 0, Skipped: 0"
@@ -21,5 +29,8 @@ tests:
     exit-code: 0
 
   run dgoss with invalid goss path:
-    command: "GOSS_PATH=/invalid ./dgoss run nginx:latest"
+    command: "./dgoss run nginx:latest"
+    config:
+      env:
+        - GOSS_PATH=invalid
     exit-code: 1
