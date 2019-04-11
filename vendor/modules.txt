@@ -22,15 +22,15 @@ github.com/mattn/go-isatty
 github.com/miekg/dns
 # github.com/oleiade/reflections v0.0.0-20160817071559-0e86b3c98b2f
 github.com/oleiade/reflections
-# github.com/onsi/gomega v0.0.0-20161031154339-ff4bc6b6f9f5
+# github.com/onsi/gomega v1.5.0
 github.com/onsi/gomega
+github.com/onsi/gomega/format
 github.com/onsi/gomega/types
 github.com/onsi/gomega/internal/assertion
 github.com/onsi/gomega/internal/asyncassertion
 github.com/onsi/gomega/internal/testingtsupport
 github.com/onsi/gomega/matchers
 github.com/onsi/gomega/internal/oraclematcher
-github.com/onsi/gomega/format
 github.com/onsi/gomega/matchers/support/goraph/bipartitegraph
 github.com/onsi/gomega/matchers/support/goraph/edge
 github.com/onsi/gomega/matchers/support/goraph/node
@@ -45,7 +45,27 @@ github.com/pmezard/go-difflib/difflib
 github.com/stretchr/testify/assert
 # github.com/urfave/cli v0.0.0-20161102131801-d86a009f5e13
 github.com/urfave/cli
+# golang.org/x/net v0.0.0-20180906233101-161cd47e91fd
+golang.org/x/net/html/charset
+golang.org/x/net/html
+golang.org/x/net/html/atom
 # golang.org/x/sys v0.0.0-20181210030007-2a47403f2ae5
 golang.org/x/sys/unix
-# gopkg.in/yaml.v2 v2.0.0-20160928153709-a5b47d31c556
+# golang.org/x/text v0.3.0
+golang.org/x/text/encoding
+golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding/htmlindex
+golang.org/x/text/transform
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/japanese
+golang.org/x/text/encoding/korean
+golang.org/x/text/encoding/simplifiedchinese
+golang.org/x/text/encoding/traditionalchinese
+golang.org/x/text/encoding/unicode
+golang.org/x/text/language
+golang.org/x/text/internal/utf8internal
+golang.org/x/text/runes
+golang.org/x/text/internal/tag
+# gopkg.in/yaml.v2 v2.2.1
 gopkg.in/yaml.v2
