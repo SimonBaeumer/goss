@@ -1,0 +1,13 @@
+mount:
+  /dev:
+    exists: true
+    opts:
+      - rw
+      - nosuid
+    source: tmpfs
+    filesystem: tmpfs
+
+  /proc/bus:
+    exists: true
+    source: proc
+    filesystem: proc

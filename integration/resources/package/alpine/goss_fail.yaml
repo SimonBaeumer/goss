@@ -1,0 +1,9 @@
+package:
+  busybox:
+    installed: true
+    versions:
+      - 100.0.0
+  not exist:
+    installed: true
+  zlib:
+    installed: false

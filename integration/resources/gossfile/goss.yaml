@@ -1,0 +1,6 @@
+gossfile:
+  another_goss.yaml: {}
+  _more/*.yaml: {}
+command:
+  echo another:
+    exit-status: 0

@@ -1,0 +1,5 @@
+package:
+  python:
+    installed: true
+    versions:
+      - 2.7.5

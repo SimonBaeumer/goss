@@ -1,0 +1,19 @@
+file:
+  /tmp/test-file.txt:
+    exists: true
+    mode: "0644"
+    size: 13
+    filetype: file
+    owner: root
+    group: root
+    md5: d6eb32081c822ed572b70567826d9d9d
+    sha256: a1fff0ffefb9eace7230c24e50731f0a91c62f9cefdfe77121c2f607125dffae
+    contains:
+      - test content
+  /tmp/directory:
+    exists: true
+    filetype: directory
+  /tmp/symlink.txt:
+    exists: true
+    filetype: symlink
+    linked-to: /tmp/test-file.txt

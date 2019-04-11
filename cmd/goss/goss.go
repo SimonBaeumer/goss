@@ -15,6 +15,7 @@ import (
 var version string
 
 func main() {
+
 	startTime := time.Now()
 	app := cli.NewApp()
 	app.EnableBashCompletion = true

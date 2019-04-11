@@ -1,0 +1,7 @@
+package:
+  apt:
+    installed: true
+    versions:
+      - 100.0.0
+  no exists:
+    installed: true

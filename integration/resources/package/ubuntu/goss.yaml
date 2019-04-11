@@ -1,0 +1,7 @@
+package:
+  apt:
+    installed: true
+    versions:
+      - 1.6.8
+  no exists:
+    installed: false

@@ -667,7 +667,7 @@ matching:
   check_status:
     content: {{ .Vars.status }}
     matches:
-      - not: FAIL
+      not: FAIL
 ```
 
 #### Without [Templates](#templates):

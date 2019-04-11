@@ -1,8 +1,9 @@
 config:
   timeout: 20000 # Set timeout to 20s
   env:
-    - GOSS_PATH=./../../release/goss-linux-amd64
-    - GOSS_FILES_STRATEGY=mount
+    GOSS_PATH: ./../../release/goss-linux-amd64
+    GOSS_FILES_STRATEGY: mount
+
 tests:
   run dgoss with mount strategy:
     command: "./dgoss run nginx:latest"
@@ -11,27 +12,27 @@ tests:
         - "Count: 1, Failed: 0, Skipped: 0"
     stderr:
       lines:
-        0: "INFO: Starting docker container"
+        1: "INFO: Starting docker container"
     exit-code: 0
 
   run dgoss with cp strategy:
     command: "./dgoss run nginx:latest"
     config:
       env:
-        - GOSS_PATH=./../../release/goss-linux-amd64
-        - GOSS_FILES_STRATEGY=cp
+        GOSS_PATH: ./../../release/goss-linux-amd64
+        GOSS_FILES_STRATEGY: cp
     stdout:
       contains:
         - "Count: 1, Failed: 0, Skipped: 0"
     stderr:
       lines:
-        0: "INFO: Creating docker container"
-        1: "INFO: Copy goss files into container"
+        1: "INFO: Creating docker container"
+        2: "INFO: Copy goss files into container"
     exit-code: 0
 
   run dgoss with invalid goss path:
     command: "./dgoss run nginx:latest"
     config:
       env:
-        - GOSS_PATH=invalid
+        GOSS_PATH: invalid
     exit-code: 1

@@ -1,0 +1,8 @@
+mount:
+  /dev:
+    exists: true
+    source: proc
+    filesystem: proc
+
+  /proc/bus:
+    exists: false
