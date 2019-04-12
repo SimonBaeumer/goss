@@ -1,0 +1,40 @@
+acl "trusted" {
+    172.20.0.3;     # nameserver
+    172.20.0.2;     # host client
+};
+
+options {
+        directory "/var/cache/bind";
+
+        recursion yes;                 # enables resursive queries
+        allow-recursion { trusted; };  # allows recursive queries from "trusted" clients
+        listen-on { 172.20.0.3; };     # ns IP address
+        allow-transfer { none; };      # disable zone transfers by default
+
+        forwarders {
+                8.8.8.8;
+                8.8.4.4;
+        };
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        // forwarders {
+        //      0.0.0.0;
+        // };
+
+        //========================================================================
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+        //========================================================================
+        dnssec-validation auto;
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};

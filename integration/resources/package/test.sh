@@ -34,4 +34,4 @@ case "${OS}" in
 esac
 
 echo "IMAGE: ${IMAGE}"
-docker run -v $(pwd)/"${GOSS_EXE}":/bin/goss -v $(pwd)/"${OS}":/app "${IMAGE}" /bin/sh -c "goss -g /app/${GOSS_FILE} validate"
+docker run --rm -v $(pwd)/"${GOSS_EXE}":/bin/goss -v $(pwd)/"${OS}":/app "${IMAGE}" /bin/sh -c "goss -g /app/${GOSS_FILE} validate"

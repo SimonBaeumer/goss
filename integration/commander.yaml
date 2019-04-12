@@ -1,6 +1,7 @@
 config:
   env:
     GOSS_EXE: /../../../release/goss-linux-amd64
+#    PATH: /usr/bin:/usr/local/bin
 
 tests:
   command resource should fail:
@@ -158,7 +159,7 @@ tests:
         - |-
           Interface: eth0: addrs:
           Expected
-              <[]string | len:1, cap:1>: ["172.20.11.100/24"]
+              <[]string | len:1, cap:1>: ["172.22.11.100/16"]
           to contain element matching
               <string>: 192.168.0.0/16
         - "Count: 5, Failed: 3, Skipped: 0"
@@ -523,6 +524,16 @@ tests:
           to equal
               <bool>: true
         - "Count: 4, Failed: 2, Skipped: 0"
+
+  dns resource should succeed:
+    config:
+      dir: ./resources/dns
+      timeout: 2m
+      env:
+        PATH: /usr/local/bin:/usr/bin
+    command: ./test_success.sh
+    stdout: "Count: 10, Failed: 0, Skipped: 0"
+
   # http resource should succeed:
  #   config:
  #     dir: ./resources/http

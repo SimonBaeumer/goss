@@ -115,3 +115,7 @@ push-images:
 integration:
 	$(info INFO: Starting build $@)
 	cd integration && commander test
+
+integration-debug:
+	$(info INFO: Starting build $@)
+	cd integration && commander test --verbose commander.yaml

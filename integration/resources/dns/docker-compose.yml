@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+  app:
+    build: app
+    dns: 172.17.10.3
+    tty: true
+    volumes:
+      - "./:/app"
+      - "${PWD}/${GOSS_EXE}:/bin/goss"
+      - "${PWD}/app/resolv.conf:/etc/resolv.conf"
+    networks:
+      bind:
+        ipv4_address: 172.20.0.2
+
+  bind:
+    restart: always
+    build: bind
+    networks:
+      bind:
+        ipv4_address: 172.20.0.3
+
+networks:
+  bind:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

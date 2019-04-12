@@ -2,7 +2,7 @@ interface:
   eth0:
     exists: true
     addrs:
-    - 172.20.10.100/24
+    - 172.21.11.100/16
     mtu: 1500
 
   lo:

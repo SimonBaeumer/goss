@@ -1,8 +1,0 @@
-command:
-  echo hello:
-    stdout:
-      - fail
-    exit-status: 0
-
-  echo fail:
-    exit-status: 1

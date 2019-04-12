@@ -2,6 +2,7 @@
 set -euo pipefail
 
 docker run \
+    --rm \
     -v $(pwd)/"${GOSS_EXE}":/bin/goss \
     -v $(pwd):/app \
     centos:7 \
