@@ -10,22 +10,23 @@ Fail and Success case for every resource.
  - [x] gossfile
  - [x] group
  - [ ] http
+    - [ ] https
  - [x] interface
  - [x] kernel-param
  - [x] mount
  - [x] matching
  - [x] package
+    - [x] yum
+    - [x] apt
+    - [x] apk
+    - [ ] pacman
  - [x] port
  - [x] process
  - [x] service
+    - [ ] upstart
+    - [x] systemd
+    - [ ] init
  - [x] user
- 
-Check resources for different operating systems (service / package):
- 
- - [ ] alpine
- - [ ] debian
- - [ ] ubuntu
- - [ ] arch
  
 ### Other
  

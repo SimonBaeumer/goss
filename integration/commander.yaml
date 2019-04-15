@@ -534,8 +534,28 @@ tests:
     command: ./test_success.sh
     stdout: "Count: 10, Failed: 0, Skipped: 0"
 
-  # http resource should succeed:
- #   config:
- #     dir: ./resources/http
- #   command: ./test_success.sh
- #   stdout: ''
+  http resource should succeed:
+    config:
+      dir: ./resources/http
+    command: ./test_success.sh
+    stdout: "Count: 10, Failed: 0, Skipped: 0"
+
+  http resource should fail:
+    config:
+      dir: ./resources/http
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          HTTP: http://localhost:80/not_found.php: status:
+          Expected
+              <int>: 404
+          to equal
+              <int>: 500
+        - |-
+          HTTP: http://localhost:80/header_send.php: Headers:
+          Did not find header Does not exist got
+        - |-
+          HTTP: http://localhost:80/body.php: Body: patterns not found: [Not existing]
+        - "Count: 5, Failed: 3, Skipped: 0"

@@ -25,5 +25,6 @@ trap "docker stop ${ID}" EXIT
 # Start httpd service
 docker exec "${ID}" /bin/sh -c "systemctl start httpd "
 
+sleep 1
 # Execute goss tests in container
 docker exec "${ID}" /bin/sh -c "goss -g /app/${GOSS_FILE} validate"
