@@ -1,0 +1,9 @@
+group:
+  root:
+    exists: true
+    gid: 0
+  test:
+    exists: true
+    gid: 1000
+  invalid:
+    exists: false

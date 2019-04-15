@@ -1,0 +1,19 @@
+file:
+  /tmp/not-existing.txt:
+    exists: true
+  /tmp/directory:
+    exists: false
+  /tmp/symlink.txt:
+    exists: true
+    filetype: directory
+  /tmp/test-file.txt:
+    exists: true
+    mode: "0777"
+    size: 2000
+    filetype: symlink
+    owner: test
+    group: test
+    md5: "99999999999999999999999999999999"
+    sha256: "9999999999999999999999999999999999999999999999999999999999999999"
+    contains:
+      - no content

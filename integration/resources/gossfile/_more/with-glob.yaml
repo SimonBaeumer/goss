@@ -1,0 +1,3 @@
+command:
+  echo glob:
+    exit-status: 0

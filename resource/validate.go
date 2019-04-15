@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/onsi/gomega/format"
 	"io"
 	"reflect"
 	"regexp"
@@ -61,6 +62,7 @@ func skipResult(typeS string, testType int, id string, title string, meta meta, 
 }
 
 func ValidateValue(res ResourceRead, property string, expectedValue interface{}, actual interface{}, skip bool) TestResult {
+	format.TruncatedDiff = false
 	id := res.ID()
 	title := res.GetTitle()
 	meta := res.GetMeta()
@@ -249,6 +251,7 @@ func patternsToSlice(patterns []patternMatcher) []string {
 }
 
 func ValidateContains(res ResourceRead, property string, expectedValues []string, method func() (io.Reader, error), skip bool) TestResult {
+	format.TruncatedDiff = false
 	id := res.ID()
 	title := res.GetTitle()
 	meta := res.GetMeta()

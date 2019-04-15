@@ -1,0 +1,12 @@
+user:
+  fail:
+    exists: true
+
+  root:
+    exists: true
+    uid: 100
+    gid: 100
+    home: /app
+    groups:
+      - none
+    shell: /bin/false

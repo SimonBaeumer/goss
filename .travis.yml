@@ -22,6 +22,7 @@ before_install:
 - go get -u golang.org/x/lint/golint
 - go get github.com/securego/gosec/cmd/gosec
 - make deps
+- curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/commander/master/install.sh | COMMANDER_VER=v1.1.0 COMMANDER_DST=~/bin sh
 
 jobs:
   include:
@@ -38,16 +39,14 @@ jobs:
       after_script:
         - ./test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
 
-    - name: "Integration tests 64-bit"
-      script: make test-int
-
-    - name: "Integration test 32-bit"
-      script: make test-int-32
+    - name: "Integration"
+      script:
+        - make build
+        - make integration
 
     - name: "dgoss tests"
-      before_script:
-        - curl -fsSL https://raw.githubusercontent.com/SimonBaeumer/commander/master/install.sh | COMMANDER_VER=v0.2.1 COMMANDER_DST=~/bin sh
       script:
+        - docker pull nginx:latest
         - make build
         - make test-dgoss
 

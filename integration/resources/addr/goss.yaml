@@ -1,0 +1,7 @@
+addr:
+  tcp://99.99.99.99:999:
+    reachable: false
+    timeout: 500
+  tcp://localhost:80:
+    reachable: true
+    timeout: 500

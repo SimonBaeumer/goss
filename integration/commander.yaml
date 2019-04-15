@@ -1,0 +1,561 @@
+config:
+  env:
+    GOSS_EXE: /../../../release/goss-linux-amd64
+#    PATH: /usr/bin:/usr/local/bin
+
+tests:
+  command resource should fail:
+    config:
+      dir: ./resources/command
+    command: ./test_fail.sh
+    stdout:
+      contains:
+        - |-
+          Command: echo fail: exit-status:
+          Expected
+              <int>: 0
+          to equal
+              <int>: 1
+        - "Command: echo hello: stdout: patterns not found: [fail]"
+        - "Count: 3, Failed: 2, Skipped: 0"
+    exit-code: 1
+
+  command resource should succeed:
+    config:
+      dir: ./resources/command
+    command: ./test_success.sh
+    stdout: 'Count: 6, Failed: 0, Skipped: 0'
+
+  user resource should succeed:
+    config:
+      dir: ./resources/user
+    command: ./test_success.sh
+    stdout: 'Count: 7, Failed: 0, Skipped: 0'
+
+
+  user resource should fail:
+    config:
+      dir: ./resources/user
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          User: fail: exists:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - |-
+          User: root: uid:
+          Expected
+              <int>: 0
+          to equal
+              <int>: 100
+        - |-
+          User: root: gid:
+          Expected
+              <int>: 0
+          to equal
+              <int>: 100
+        - |-
+          User: root: groups:
+          Expected
+              <[]string | len:1, cap:1>: ["root"]
+          to contain element matching
+              <string>: none
+        - |-
+          User: root: shell:
+          Expected
+              <string>: /bin/bash
+          to equal
+              <string>: /bin/false
+
+  addr resource should succedd:
+    config:
+      dir: ./resources/addr
+    command: ./test_success.sh
+    stdout: "Count: 2, Failed: 0, Skipped: 0"
+
+  addr resource should fail:
+    config:
+      dir: ./resources/addr
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Addr: tcp://localhost:80: reachable:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Addr: tcp://99.99.99.99:999: reachable:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - "Count: 2, Failed: 2, Skipped: 0"
+
+  group resource should succeed:
+    config:
+      dir: ./resources/group
+    command: ./test_success.sh
+    stdout: "Count: 5, Failed: 0, Skipped: 0"
+
+  group resource should fail:
+    config:
+      dir: ./resources/group
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Group: root: exists:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Group: root: gid:
+          Expected
+              <int>: 0
+          to equal
+              <int>: 1
+        - |-
+          Group: test: gid:
+          Expected
+              <int>: 1000
+          to equal
+              <int>: 9999
+        - "Count: 4, Failed: 3, Skipped: 0"
+
+  interface resource should succeed:
+    config:
+      dir: ./resources/interface
+    command: ./test_success.sh
+    stdout: "Count: 6, Failed: 0, Skipped: 0"
+
+  interface resource should fail:
+    config:
+      dir: ./resources/interface
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Interface: lo: exists:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Interface: lo: mtu:
+          Expected
+              <int>: 65536
+          to equal
+              <int>: 9999
+        - |-
+          Interface: eth0: addrs:
+          Expected
+              <[]string | len:1, cap:1>: ["172.22.11.100/16"]
+          to contain element matching
+              <string>: 192.168.0.0/16
+        - "Count: 5, Failed: 3, Skipped: 0"
+
+
+
+  port resource should succeed:
+    config:
+      dir: ./resources/port
+    command: ./test_success.sh
+    stdout: "Count: 3, Failed: 0, Skipped: 0"
+
+  port resource should fail:
+    config:
+      dir: ./resources/port
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Port: tcp:80: listening:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Port: tcp:80: ip:
+          Expected
+              <[]string | len:1, cap:1>: ["0.0.0.0"]
+          to contain element matching
+              <string>: 192.168.10.10
+        - |-
+          Port: tcp:9999: listening:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - |-
+          Port: tcp:9999: ip: skipped
+        - "Count: 4, Failed: 3, Skipped: 1"
+
+  process resource should succeed:
+    config:
+      dir: ./resources/process
+    command: ./test_success.sh
+    stdout: "Count: 2, Failed: 0, Skipped: 0"
+
+  process resource should fail:
+    config:
+      dir: ./resources/process
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Process: goss: running:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Process: not: running:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - "Count: 2, Failed: 2, Skipped: 0"
+
+  file resource should succeed:
+    config:
+      dir: ./resources/file
+    command: ./test_success.sh
+    stdout: "Count: 14, Failed: 0, Skipped: 0"
+
+  file resource should fail:
+    config:
+      dir: ./resources/file
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          File: /tmp/not-existing.txt: exists:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - |-
+          File: /tmp/directory: exists:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          File: /tmp/symlink.txt: filetype:
+          Expected
+              <string>: symlink
+          to equal
+              <string>: directory
+        - |-
+          File: /tmp/test-file.txt: mode:
+          Expected
+              <string>: 0644
+          to equal
+              <string>: 0777
+        - |-
+          File: /tmp/test-file.txt: owner:
+          Expected
+              <string>: root
+          to equal
+              <string>: test
+
+        - |-
+          File: /tmp/test-file.txt: group:
+          Expected
+              <string>: root
+          to equal
+              <string>: test
+        - "File: /tmp/test-file.txt: contains: patterns not found: [no content]"
+        - |-
+          File: /tmp/test-file.txt: size:
+          Expected
+              <int>: 13
+          to equal
+              <int>: 2000
+        - |-
+          File: /tmp/test-file.txt: md5:
+          Expected
+              <string>: d6eb32081c822ed572b70567826d9d9d
+          to equal
+              <string>: 99999999999999999999999999999999
+        - |-
+          File: /tmp/test-file.txt: sha256:
+          Expected
+              <string>: a1fff0ffefb9eace7230c24e50731f0a91c62f9cefdfe77121c2f607125dffae
+          to equal
+              <string>: 9999999999999999999999999999999999999999999999999999999999999999
+        - "Count: 13, Failed: 11, Skipped: 0"
+
+  gossfile resource should succeed:
+    config:
+      dir: ./resources/gossfile
+    command: ./test_success.sh
+    stdout: "Count: 3, Failed: 0, Skipped: 0"
+
+  gossfile resource should fail:
+    config:
+      dir: ./resources/gossfile
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout: "No matched files were found: \"/app/*none\""
+
+  package resource should succeed on centos:
+    config:
+      dir: ./resources/package
+    command: ./test.sh centos goss.yaml
+    stdout:
+      contains:
+        - "IMAGE: centos:7"
+        - "Count: 2, Failed: 0, Skipped: 0"
+
+  package resource should fail on centos:
+    config:
+      dir: ./resources/package
+    command: ./test.sh centos goss_fail.yaml
+    exit-code: 1
+    stdout:
+      contains:
+        - "IMAGE: centos:7"
+        - |-
+          Package: python: version:
+          Expected
+              <[]string | len:1, cap:1>: ["2.7.5"]
+          to contain element matching
+              <string>: 100.0.0
+        - |-
+          Package: not-exists: installed:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - "Count: 3, Failed: 2, Skipped: 0"
+
+  package resource should succeed on alpine:
+    config:
+      dir: ./resources/package
+    command: ./test.sh alpine goss.yaml
+    stdout:
+      contains:
+        - "IMAGE: alpine:3.9"
+        - "Count: 2, Failed: 0, Skipped: 0"
+
+  package resource should fail on alpine:
+    config:
+      dir: ./resources/package
+    command: ./test.sh alpine goss_fail.yaml
+    exit-code: 1
+    stdout:
+      contains:
+        - "IMAGE: alpine:3.9"
+        - |-
+          Package: busybox: version:
+          Expected
+              <[]string | len:1, cap:1>: ["1.29.3-r10"]
+          to contain element matching
+              <string>: 100.0.0
+        - |-
+          Package: zlib: installed:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Package: not exist: installed:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - "Count: 4, Failed: 3, Skipped: 0"
+
+  package resource should succeed on ubuntu:
+    config:
+      dir: ./resources/package
+    command: ./test.sh ubuntu goss.yaml
+    stdout:
+      contains:
+        - "IMAGE: ubuntu:18.04"
+        - "Count: 3, Failed: 0, Skipped: 0"
+
+  package resource should fail on ubuntu:
+    config:
+      dir: ./resources/package
+    command: ./test.sh ubuntu goss_fail.yaml
+    exit-code: 1
+    stdout:
+      contains:
+        - "IMAGE: ubuntu:18.04"
+        - |-
+          Package: apt: version:
+          Expected
+              <[]string | len:1, cap:1>: ["1.6.8"]
+          to contain element matching
+              <string>: 100.0.0
+        - |-
+          Package: no exists: installed:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - "Count: 3, Failed: 2, Skipped: 0"
+
+  matching resource should succeed:
+    config:
+      dir: ./resources/matching
+    command: ./test_success.sh
+    stdout: "Count: 6, Failed: 0, Skipped: 0"
+
+  matching resource should fail:
+    config:
+      dir: ./resources/matching
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Matching: check_failure_count_from_all_instance: matches:
+          Expected
+              <int>: 0
+          to equal
+              <int>: 3
+        - |-
+          Matching: check_instance_count: matches:
+          Expected
+              <int>: 14
+          to be >
+              <int>: 15
+        - |-
+          Matching: check_status: matches:
+          Expected
+              <string>: SUCCESS
+          not to equal
+              <string>: SUCCESS
+        - "Count: 3, Failed: 3, Skipped: 0"
+
+  kernel-param resource should succeed:
+    config:
+      dir: ./resources/kernel-param
+    command: ./test_success.sh
+    stdout: "Count: 1, Failed: 0, Skipped: 0"
+
+  kernel-param resouce should fail:
+    config:
+      dir: ./resources/kernel-param
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          KernelParam: kernel.ostype: value:
+          Expected
+              <string>: Linux
+          to equal
+              <string>: Windows
+        - "Count: 1, Failed: 1, Skipped: 0"
+
+  mount resource should succeed:
+    config:
+      dir: ./resources/mount
+    command: ./test_success.sh
+    stdout: "Count: 7, Failed: 0, Skipped: 0"
+
+  mount resource should fail:
+    config:
+      dir: ./resources/mount
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Mount: /proc/bus: exists:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Mount: /dev: source:
+          Expected
+              <string>: tmpfs
+          to equal
+              <string>: proc
+        - |-
+          Mount: /dev: filesystem:
+          Expected
+              <string>: tmpfs
+          to equal
+              <string>: proc
+        - "Count: 4, Failed: 3, Skipped: 0"
+
+  service resource should succeed:
+    config:
+      dir: ./resources/service
+    command: ./test.sh centos goss.yaml
+    stdout: "Count: 6, Failed: 0, Skipped: 0"
+
+  service resource should fail:
+    config:
+      dir: ./resources/service
+    command: ./test.sh centos goss_fail.yaml
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          Service: httpd: running:
+          Expected
+              <bool>: true
+          to equal
+              <bool>: false
+        - |-
+          Service: multiuser.target: enabled:
+          Expected
+              <bool>: false
+          to equal
+              <bool>: true
+        - "Count: 4, Failed: 2, Skipped: 0"
+
+  dns resource should succeed:
+    config:
+      dir: ./resources/dns
+      timeout: 2m
+      env:
+        PATH: /usr/local/bin:/usr/bin
+    command: ./test_success.sh
+    stdout: "Count: 10, Failed: 0, Skipped: 0"
+
+  http resource should succeed:
+    config:
+      dir: ./resources/http
+    command: ./test_success.sh
+    stdout: "Count: 10, Failed: 0, Skipped: 0"
+
+  http resource should fail:
+    config:
+      dir: ./resources/http
+    command: ./test_fail.sh
+    exit-code: 1
+    stdout:
+      contains:
+        - |-
+          HTTP: http://localhost:80/not_found.php: status:
+          Expected
+              <int>: 404
+          to equal
+              <int>: 500
+        - |-
+          HTTP: http://localhost:80/header_send.php: Headers:
+          Did not find header Does not exist got
+        - |-
+          HTTP: http://localhost:80/body.php: Body: patterns not found: [Not existing]
+        - "Count: 5, Failed: 3, Skipped: 0"

@@ -1,0 +1,10 @@
+zone "dnstesting.com" {
+    type master;
+    file "/etc/bind/zones/db.dnstesting.com";   # zone file path
+};
+
+zone "20.172.in-addr.arpa" {
+    type master;
+    notify no;
+    file "/etc/bind/zones/db.20.172";  # 172.20.0.0/16 subnet
+};

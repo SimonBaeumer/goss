@@ -1,0 +1,12 @@
+service:
+  default.target:
+    enabled: true
+    running: true
+
+  multiuser.target:
+    enabled: false
+    running: false
+
+  httpd:
+    enabled: true
+    running: true

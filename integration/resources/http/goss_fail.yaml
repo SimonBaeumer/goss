@@ -1,0 +1,19 @@
+http:
+  http://localhost:80/body.php:
+    status: 200
+    allow-insecure: false
+    no-follow-redirects: false
+    timeout: 5000
+    body:
+    - Not existing
+
+  # Wrong status code
+  http://localhost:80/not_found.php:
+    status: 500
+
+  # Wrong headers
+  http://localhost:80/header_send.php:
+    status: 200
+    headers:
+      Does not exist:
+      - duplicate

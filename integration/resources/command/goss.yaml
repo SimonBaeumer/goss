@@ -1,0 +1,15 @@
+command:
+  echo hello:
+    stdout:
+      - hello
+    exit-status: 0
+
+  id -u:
+    stdout:
+      - 0
+    exit-status: 0
+
+  invalid:
+    stderr:
+      - "not found"
+    exit-status: 127

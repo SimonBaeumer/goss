@@ -1,0 +1,39 @@
+http:
+  http://localhost:80/body.php:
+    status: 200
+    allow-insecure: false
+    no-follow-redirects: false
+    timeout: 5000
+    body:
+      - My test string
+      - End of content
+
+  http://localhost:80/not_found.php:
+    status: 404
+    body:
+      - not found
+
+  http://localhost:80/header_send.php:
+    status: 200
+    headers:
+      More:
+        - testing
+        - duplicate
+
+  http://localhost:80/header_received.php:
+    status: 200
+    body:
+      - success
+    request-headers:
+      goss-test:
+        - worked!
+      another:
+        - more
+
+  http://localhost:80/http_auth.php:
+    status: 200
+    body:
+      - "user: root"
+      - "password: something"
+    username: root
+    password: something

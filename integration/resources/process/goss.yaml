@@ -1,0 +1,5 @@
+process:
+  goss:
+    running: true
+  not:
+    running: false

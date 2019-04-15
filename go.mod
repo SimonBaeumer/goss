@@ -13,11 +13,12 @@ require (
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/miekg/dns v0.0.0-20161018060808-58f52c57ce9d
 	github.com/oleiade/reflections v0.0.0-20160817071559-0e86b3c98b2f
-	github.com/onsi/gomega v0.0.0-20161031154339-ff4bc6b6f9f5
+	github.com/onsi/gomega v1.5.0
+
 	github.com/opencontainers/runc v0.0.0-20161107232042-8779fa57eb4a
 	github.com/patrickmn/go-cache v2.0.0+incompatible
 	github.com/stretchr/testify v1.3.0
 	github.com/urfave/cli v0.0.0-20161102131801-d86a009f5e13
 	golang.org/x/sys v0.0.0-20181210030007-2a47403f2ae5 // indirect
-	gopkg.in/yaml.v2 v2.0.0-20160928153709-a5b47d31c556
+	gopkg.in/yaml.v2 v2.2.1
 )

@@ -1,0 +1,14 @@
+matching:
+  check_instance_count:
+    content: {{ .Vars.instance_count }}
+    matches:
+      gt: 15
+
+  check_failure_count_from_all_instance:
+    content: {{ .Vars.failures }}
+    matches: 3
+
+  check_status:
+    content: {{ .Vars.status }}
+    matches:
+      not: SUCCESS

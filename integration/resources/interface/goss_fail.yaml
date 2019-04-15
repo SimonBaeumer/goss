@@ -1,0 +1,10 @@
+interface:
+  eth0:
+    exists: true
+    addrs:
+      - 192.168.0.0/16
+    mtu: 1500
+
+  lo:
+    exists: false
+    mtu: 9999
