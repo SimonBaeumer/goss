@@ -1,10 +1,7 @@
 # Goss - Quick and Easy server validation
 
 [![Build Status](https://travis-ci.org/SimonBaeumer/goss.svg?branch=master)](https://travis-ci.org/SimonBaeumer/goss)
-[![Go Report Card](https://goreportcard.com/badge/github.com/SimonBaeumer/goss)](https://goreportcard.com/report/github.com/SimonBaeumer/goss)
-[![Maintainability](https://api.codeclimate.com/v1/badges/4024768d424e4731012e/maintainability)](https://codeclimate.com/github/SimonBaeumer/goss/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/4024768d424e4731012e/test_coverage)](https://codeclimate.com/github/SimonBaeumer/goss/test_coverage)
-[![Github All Releases](https://img.shields.io/github/downloads/SimonBaeumer/goss/total.svg)](https://github.com/SimonBaeumer/goss/releases)
 
 ## Goss in 45 seconds
 
@@ -13,12 +10,15 @@
 **Note:** For testing docker containers see the [dgoss](https://github.com/SimonBaeumer/goss/tree/master/extras/dgoss) wrapper
 
 **Note:** For some Docker/Kubernetes healthcheck, health endpoint, and
-container ordering examples, see the blog post from the creator @aelsabbahy
-[here][kubernetes-simplified-health-checks].
+container ordering examples, see the blog post from @aelsabbahy [here][kubernetes-simplified-health-checks].
 
 <a href="https://asciinema.org/a/4suhr8p42qcn6r7crfzt6cc3e?autoplay=1" target="_blank"><img src="https://cloud.githubusercontent.com/assets/6783261/17330426/ce7ad066-5894-11e6-84ea-29fd4207af58.gif" alt="asciicast"></a>
 
 ## Introduction
+
+### Why forked?
+
+I forked because the [goss](https://github.com/aelsabbahy/goss) seems not be under active development anymore.
 
 ### What is Goss?
 
