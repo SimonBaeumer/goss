@@ -6,7 +6,7 @@ cmd = goss
 TRAVIS_TAG ?= "0.0.0"
 GO_FILES = $(shell find . \( -path ./vendor -o -name '_test.go' \) -prune -o -name '*.go' -print)
 
-.PHONY: all build install test coverage deps release bench test-int lint gen centos7 wheezy precise alpine3 arch test-int32 centos7-32 wheezy-32 precise-32 alpine3-32 arch-32 integration
+.PHONY: all build install test coverage deps release bench test-int lint gen integration
 
 all: test-all test-all-32
 
@@ -46,43 +46,7 @@ release:
 
 build: release/goss-linux-386 release/goss-linux-amd64 release/goss-linux-arm
 
-test-int: centos7 wheezy precise alpine3 arch
-test-int-32: centos7-32 wheezy-32 precise-32 alpine3-32 arch-32
-
-centos7-32: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh centos7 386
-wheezy-32: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh wheezy 386
-precise-32: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh precise 386
-alpine3-32: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh alpine3 386
-arch-32: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh arch 386
-centos7: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh centos7 amd64
-wheezy: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh wheezy amd64
-precise: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh precise amd64
-alpine3: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh alpine3 amd64
-arch: build
-	$(info INFO: Starting build $@)
-	cd integration-tests/ && ./test.sh arch amd64
-
-
-test-all-32: lint test test-int-32
-test-all: lint test test-int
+test-all: lint test integration
 
 test-dgoss:
 	$(info INFO: Starting build $@)
@@ -103,14 +67,6 @@ gen:
 clean:
 	$(info INFO: Starting build $@)
 	rm -rf ./release
-
-build-images:
-	$(info INFO: Starting build $@)
-	development/build_images.sh
-
-push-images:
-	$(info INFO: Starting build $@)
-	development/push_images.sh
 
 integration:
 	$(info INFO: Starting build $@)
