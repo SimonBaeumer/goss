@@ -4,10 +4,6 @@ c.out
 *.bak
 /goss
 /release
-/integration-tests/goss/goss
-/integration-tests/**/*-generated*
-/integration-tests/**/goss-linux-386
-/integration-tests/**/goss-linux-amd64
 development/http_test_server
 
 # Random stuff for my local testing/development that I don't want checked in
