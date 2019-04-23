@@ -16,9 +16,10 @@ container ordering examples, see the blog post from @aelsabbahy [here][kubernete
 
 ## Introduction
 
-### Why forked?
+### Why a fork?
 
-I forked because the [goss](https://github.com/aelsabbahy/goss) seems not be under active development anymore.
+I forked this project because the [original](https://github.com/aelsabbahy/goss) repository isn't under active development anymore.
+Due to this I started this fork.
 
 ### What is Goss?
 
