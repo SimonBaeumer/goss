@@ -16,11 +16,6 @@ container ordering examples, see the blog post from @aelsabbahy [here][kubernete
 
 ## Introduction
 
-### Why a fork?
-
-I forked this project because the [original](https://github.com/aelsabbahy/goss) repository isn't under active development anymore.
-Due to this I started this fork.
-
 ### What is Goss?
 
 Goss is a YAML based [serverspec](http://serverspec.org/) alternative tool for validating a server’s configuration. It eases the process of writing tests by allowing the user to generate tests from the current system state. Once the test suite is written they can be executed, waited-on, or served as a health endpoint.
@@ -30,6 +25,11 @@ Goss is a YAML based [serverspec](http://serverspec.org/) alternative tool for v
 * Goss is EASY! - [Goss in 45 seconds](#goss-in-45-seconds)
 * Goss is FAST! - small-medium test suits are near instantaneous, see [benchmarks](https://github.com/SimonBaeumer/goss/wiki/Benchmarks)
 * Goss is SMALL! - <10MB single self-contained binary
+
+### Why a fork?
+
+I forked this project because the [original](https://github.com/aelsabbahy/goss) repository isn't under active development anymore.
+Due to the reason we use it heavily in production I started this fork.
 
 ## Installation
 
