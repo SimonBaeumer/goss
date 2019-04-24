@@ -8,6 +8,7 @@ services:
     volumes:
       - "./:/app"
       - "${PWD}/${GOSS_EXE}:/bin/goss"
+      - "${PWD}/${GOSS_EXE}/..:/goss"
       - "${PWD}/app/resolv.conf:/etc/resolv.conf"
     networks:
       bind:

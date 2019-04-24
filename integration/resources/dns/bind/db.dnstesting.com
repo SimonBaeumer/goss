@@ -2,7 +2,7 @@
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     ns.dnstesting.com. admin.dnstesting.com. (
+@       IN      SOA     dnstesting.com. admin.dnstesting.com. (
                               3         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
@@ -10,6 +10,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 ; name server
+@                          IN      A       172.20.0.3
 @                          IN      NS      ns.dnstesting.com.
 ns                         IN      A       172.20.0.3
 
@@ -17,5 +18,5 @@ ns                         IN      A       172.20.0.3
 host                       IN      A       172.20.0.2
 cname                      IN      CNAME   host.
 mail                       IN      A       172.20.0.2
-@                          IN      MX 10   mail.
+@                          IN      MX 10   mail
 @                          IN      TXT     "txt-entry"

@@ -32,6 +32,7 @@ type DefDNS struct {
 	qtype      string
 }
 
+// NewDefDNS constructor
 func NewDefDNS(host string, system *System, config util.Config) DNS {
 	var h string
 	var t string
@@ -49,18 +50,21 @@ func NewDefDNS(host string, system *System, config util.Config) DNS {
 	}
 }
 
+// Host returns the host which should be checked in the dns lookup
 func (d *DefDNS) Host() string {
 	return d.host
 }
 
+// Server returns the dns server
 func (d *DefDNS) Server() string {
 	return d.server
 }
 
+// Qtype returns the query type, i.e. TXT, MX, ...
 func (d *DefDNS) Qtype() string {
 	return d.qtype
 }
-
+// setup executes the dns lookup
 func (d *DefDNS) setup() error {
 	if d.loaded {
 		return d.err
@@ -88,66 +92,47 @@ func (d *DefDNS) setup() error {
 	return d.err
 }
 
+// Addrs returns all addresses
 func (d *DefDNS) Addrs() ([]string, error) {
 	err := d.setup()
 
 	return d.addrs, err
 }
 
+// Resolvable returns if the domain was resolvable
 func (d *DefDNS) Resolvable() (bool, error) {
 	err := d.setup()
 
 	return d.resolvable, err
 }
 
-// Stub out
+// Exists is just a stub method and not implemented
 func (d *DefDNS) Exists() (bool, error) {
 	return false, nil
 }
 
+// DNSlookup performs the DNSLookup
 func DNSlookup(host string, server string, qtype string, timeout int) ([]string, error) {
 	c1 := make(chan []string, 1)
 	e1 := make(chan error, 1)
 	timeoutD := time.Duration(timeout) * time.Millisecond
 
-	var addrs []string
-	var err error
 	go func() {
-		if server != "" {
-			c := new(dns.Client)
-			c.Timeout = timeoutD
-			m := new(dns.Msg)
-
-			switch qtype {
-			case "A":
-				addrs, err = LookupA(host, server, c, m)
-			case "AAAA":
-				addrs, err = LookupAAAA(host, server, c, m)
-			case "PTR":
-				addrs, err = LookupPTR(host, server, c, m)
-			case "CNAME":
-				addrs, err = LookupCNAME(host, server, c, m)
-			case "MX":
-				addrs, err = LookupMX(host, server, c, m)
-			case "NS":
-				addrs, err = LookupNS(host, server, c, m)
-			case "SRV":
-				addrs, err = LookupSRV(host, server, c, m)
-			case "TXT":
-				addrs, err = LookupTXT(host, server, c, m)
-			case "CAA":
-				addrs, err = LookupCAA(host, server, c, m)
-			default:
-				addrs, err = LookupHost(host, server, c, m)
+		// Lookup Nameserver if server was is not given
+		if server == "" {
+			ns, _ := net.LookupNS(host)
+			if len(ns) > 0 {
+				server = ns[0].Host
 			}
-		} else {
-			addrs, err = net.LookupHost(host)
 		}
+
+		addrs, err := performDNSLookup(timeoutD, qtype, host, server)
 		if err != nil {
 			e1 <- err
 		}
 		c1 <- addrs
 	}()
+
 	select {
 	case res := <-c1:
 		return res, nil
@@ -156,6 +141,43 @@ func DNSlookup(host string, server string, qtype string, timeout int) ([]string,
 	case <-time.After(timeoutD):
 		return nil, fmt.Errorf("DNS lookup timed out (%s)", timeoutD)
 	}
+}
+
+func performDNSLookup(timeoutD time.Duration, qtype string, host string, server string) ([]string, error) {
+	var addrs []string
+	var err error
+
+	c := new(dns.Client)
+	c.Timeout = timeoutD
+	m := new(dns.Msg)
+
+	switch qtype {
+	case "A":
+		addrs, err = LookupA(host, server, c, m)
+	case "AAAA":
+		addrs, err = LookupAAAA(host, server, c, m)
+	case "PTR":
+		addrs, err = LookupPTR(host, server, c, m)
+	case "CNAME":
+		addrs, err = LookupCNAME(host, server, c, m)
+	case "MX":
+		addrs, err = LookupMX(host, server, c, m)
+	case "NS":
+		addrs, err = LookupNS(host, server, c, m)
+	case "SRV":
+		addrs, err = LookupSRV(host, server, c, m)
+	case "TXT":
+		addrs, err = LookupTXT(host, server, c, m)
+	case "CAA":
+		addrs, err = LookupCAA(host, server, c, m)
+	default:
+		if server == "" {
+			addrs, err = net.LookupHost(host)
+		} else {
+			addrs, err = LookupHost(host, server, c, m)
+		}
+	}
+	return addrs, err
 }
 
 // A and AAAA record lookup - similar to net.LookupHost

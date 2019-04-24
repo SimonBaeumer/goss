@@ -1,3 +1,7 @@
+# v0.6.0
+
+ - Fixed a bug where DNS record lookups never were fired wihout a nameserver
+
 # v0.5.0
 
  - Add certificate authentication to `http` resource

@@ -68,7 +68,7 @@ clean:
 	$(info INFO: Starting build $@)
 	rm -rf ./release
 
-integration:
+integration: build
 	$(info INFO: Starting build $@)
 	cd integration && commander test
 
