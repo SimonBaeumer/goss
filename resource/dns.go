@@ -7,6 +7,7 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+// DNS represents the DNS resource
 type DNS struct {
 	Title       string  `json:"title,omitempty" yaml:"title,omitempty"`
 	Meta        meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
@@ -18,12 +19,17 @@ type DNS struct {
 	Server      string  `json:"server,omitempty" yaml:"server,omitempty"`
 }
 
+// ID returns the Host as the Identifier
 func (d *DNS) ID() string      { return d.Host }
+// SetID sets the ID as Host
 func (d *DNS) SetID(id string) { d.Host = id }
 
+// GetTitle returns the title
 func (d *DNS) GetTitle() string { return d.Title }
+/// GetMeta returns the meta of
 func (d *DNS) GetMeta() meta    { return d.Meta }
 
+// Validate validates the given resource
 func (d *DNS) Validate(sys *system.System) []TestResult {
 	skip := false
 	if d.Timeout == 0 {
@@ -47,6 +53,7 @@ func (d *DNS) Validate(sys *system.System) []TestResult {
 	return results
 }
 
+// NewDNS is the constructor
 func NewDNS(sysDNS system.DNS, config util.Config) (*DNS, error) {
 	var host string
 	if sysDNS.Qtype() != "" {
