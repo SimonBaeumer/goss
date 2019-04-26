@@ -1,26 +1,36 @@
 dns:
-  A:host.dnstesting.com:
+  dnstesting.com:
+    resolvable: true
+
+  MX:dnstesting.com:
+    resolvable: true
+    server: 172.20.0.3
+    addrs:
+      - 10 mail.dnstesting.com.
+
+  mail.dnstesting.com:
     resolvable: true
     addrs:
       - 172.20.0.2
-    server: 172.20.0.3
+
+  A:host.dnstesting.com:
+    resolvable: true
+    server: ns.dnstesting.com
+    addrs:
+      - 172.20.0.2
     timeout: 500
 
-  TXT:ns.dnstesting.com:
+  TXT:dnstesting.com:
     resolvable: true
     addrs:
-      - 172.20.0.3
+      - txt-entry
 
   MX:host.dnstesting.com:
-    resolvable: true
-    addrs: []
+    resolvable: false
+    server: ns.dnstesting.com
 
-  MX:ns.dnstesting.com:
+  CNAME:cname.dnstesting.com:
     resolvable: true
+    server: ns.dnstesting.com
     addrs:
-      - 172.20.0.3
-
-  PTR:ns.dnstesting.com:
-    resolvable: true
-    addrs:
-      - 172.20.0.3
+      - host.

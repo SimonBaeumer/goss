@@ -532,7 +532,7 @@ tests:
       env:
         PATH: /usr/local/bin:/usr/bin
     command: ./test_success.sh
-    stdout: "Count: 10, Failed: 0, Skipped: 0"
+    stdout: "Count: 12, Failed: 0, Skipped: 0"
 
   http resource should succeed:
     config:
