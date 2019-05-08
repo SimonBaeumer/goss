@@ -2,6 +2,6 @@ package:
   apt:
     installed: true
     versions:
-      - 1.6.8
+      - 1.6.10
   no exists:
     installed: false

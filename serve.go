@@ -2,6 +2,7 @@ package goss
 
 import (
 	"bytes"
+	"github.com/SimonBaeumer/goss/internal/app"
 	"log"
 	"net/http"
 	"sync"
@@ -12,30 +13,29 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 	"github.com/fatih/color"
 	"github.com/patrickmn/go-cache"
-	"github.com/urfave/cli"
 )
 
-func Serve(c *cli.Context) {
-	endpoint := c.String("endpoint")
+func Serve(ctx app.CliContext) {
+	endpoint := ctx.Endpoint
 	color.NoColor = true
-	cache := cache.New(c.Duration("cache"), 30*time.Second)
+	cache := cache.New(ctx.Cache, 30*time.Second)
 
 	health := healthHandler{
-		c:             c,
-		gossConfig:    getGossConfig(c),
-		sys:           system.New(c),
-		outputer:      getOutputer(c),
+		c:             ctx,
+		gossConfig:    getGossConfig(ctx),
+		sys:           system.New(ctx.Package),
+		outputer:      getOutputer(ctx),
 		cache:         cache,
 		gossMu:        &sync.Mutex{},
-		maxConcurrent: c.Int("max-concurrent"),
+		maxConcurrent: ctx.MaxConcurrent,
 	}
-	if c.String("format") == "json" {
+	if ctx.Format == "json" {
 		health.contentType = "application/json"
 	}
 	http.Handle(endpoint, health)
-	listenAddr := c.String("listen-addr")
+	listenAddr := ctx.ListenAddr
 	log.Printf("Starting to listen on: %s", listenAddr)
-	log.Fatal(http.ListenAndServe(c.String("listen-addr"), nil))
+	log.Fatal(http.ListenAndServe(ctx.ListenAddr, nil))
 }
 
 type res struct {
@@ -43,7 +43,7 @@ type res struct {
 	b        bytes.Buffer
 }
 type healthHandler struct {
-	c             *cli.Context
+	c             app.CliContext
 	gossConfig    GossConfig
 	sys           *system.System
 	outputer      outputs.Outputer
@@ -56,7 +56,7 @@ type healthHandler struct {
 func (h healthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	outputConfig := util.OutputConfig{
-		FormatOptions: h.c.StringSlice("format-options"),
+		FormatOptions: h.c.FormatOptions,
 	}
 
 	log.Printf("%v: requesting health probe", r.RemoteAddr)
@@ -71,7 +71,7 @@ func (h healthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if found {
 			resp = tmp.(res)
 		} else {
-			h.sys = system.New(h.c)
+			h.sys = system.New(h.c.Package)
 			log.Printf("%v: Stale cache, running tests", r.RemoteAddr)
 			iStartTime := time.Now()
 			out := validate(h.sys, h.gossConfig, h.maxConcurrent)

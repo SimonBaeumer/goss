@@ -8,10 +8,9 @@ import (
 	"sync"
 
 	"github.com/aelsabbahy/GOnetstat"
+	util2 "github.com/SimonBaeumer/goss/util"
 	// This needs a better name
 	"github.com/aelsabbahy/go-ps"
-	util2 "github.com/SimonBaeumer/goss/util"
-	"github.com/urfave/cli"
 )
 
 type Resource interface {
@@ -55,7 +54,8 @@ func (s *System) ProcMap() map[string][]ps.Process {
 	return s.procMap
 }
 
-func New(c *cli.Context) *System {
+//New creates the system object which holds all constructors for the system packages
+func New(packageManger string) *System {
 	sys := &System{
 		NewFile:        NewDefFile,
 		NewAddr:        NewDefAddr,
@@ -72,17 +72,16 @@ func New(c *cli.Context) *System {
 		NewHTTP:        NewDefHTTP,
 	}
 	sys.detectService()
-	sys.detectPackage(c)
+	sys.detectPackage(packageManger)
 	return sys
 }
 
 // DetectPackage adds the correct package creation function to a System struct
-func (sys *System) detectPackage(c *cli.Context) {
-	p := c.GlobalString("package")
-	if p != "deb" && p != "apk" && p != "pacman" && p != "rpm" {
-		p = DetectPackageManager()
+func (sys *System) detectPackage(pkgManager string) {
+	if pkgManager != "deb" && pkgManager != "apk" && pkgManager != "pacman" && pkgManager != "rpm" {
+		pkgManager = DetectPackageManager()
 	}
-	switch p {
+	switch pkgManager {
 	case "deb":
 		sys.NewPackage = NewDebPackage
 	case "apk":

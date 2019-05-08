@@ -400,7 +400,7 @@ tests:
         - |-
           Package: apt: version:
           Expected
-              <[]string | len:1, cap:1>: ["1.6.8"]
+              <[]string | len:1, cap:1>: ["1.6.10"]
           to contain element matching
               <string>: 100.0.0
         - |-

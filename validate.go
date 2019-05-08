@@ -2,6 +2,7 @@ package goss
 
 import (
 	"fmt"
+	"github.com/SimonBaeumer/goss/internal/app"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -14,16 +15,15 @@ import (
 	"github.com/SimonBaeumer/goss/system"
 	"github.com/SimonBaeumer/goss/util"
 	"github.com/fatih/color"
-	"github.com/urfave/cli"
 )
 
-func getGossConfig(c *cli.Context) GossConfig {
+func getGossConfig(ctx app.CliContext) GossConfig {
 	// handle stdin
 	var fh *os.File
 	var path, source string
 	var gossConfig GossConfig
-	TemplateFilter = NewTemplateFilter(c.GlobalString("vars"))
-	specFile := c.GlobalString("gossfile")
+	TemplateFilter = NewTemplateFilter(ctx.Vars)
+	specFile := ctx.Gossfile
 	if specFile == "-" {
 		source = "STDIN"
 		fh = os.Stdin
@@ -50,33 +50,33 @@ func getGossConfig(c *cli.Context) GossConfig {
 	return gossConfig
 }
 
-func getOutputer(c *cli.Context) outputs.Outputer {
-	if c.Bool("no-color") {
+func getOutputer(ctx app.CliContext) outputs.Outputer {
+	if ctx.NoColor {
 		color.NoColor = true
 	}
-	if c.Bool("color") {
+	if ctx.Color {
 		color.NoColor = false
 	}
-	return outputs.GetOutputer(c.String("format"))
+	return outputs.GetOutputer(ctx.Format)
 }
 
 // Validate validation runtime
-func Validate(c *cli.Context, startTime time.Time) {
+func Validate(ctx app.CliContext, startTime time.Time) {
 
 	outputConfig := util.OutputConfig{
-		FormatOptions: c.StringSlice("format-options"),
+		FormatOptions: ctx.FormatOptions,
 	}
 
-	gossConfig := getGossConfig(c)
-	sys := system.New(c)
-	outputer := getOutputer(c)
+	gossConfig := getGossConfig(ctx)
+	sys := system.New(ctx.Package)
+	outputer := getOutputer(ctx)
 
-	sleep := c.Duration("sleep")
-	retryTimeout := c.Duration("retry-timeout")
+	sleep := ctx.Sleep
+	retryTimeout := ctx.RetryTimeout
 	i := 1
 	for {
 		iStartTime := time.Now()
-		out := validate(sys, gossConfig, c.Int("max-concurrent"))
+		out := validate(sys, gossConfig, ctx.MaxConcurrent)
 		exitCode := outputer.Output(os.Stdout, out, iStartTime, outputConfig)
 		if retryTimeout == 0 || exitCode == 0 {
 			os.Exit(exitCode)
@@ -88,7 +88,7 @@ func Validate(c *cli.Context, startTime time.Time) {
 		}
 		color.Red("Retrying in %s (elapsed/timeout time: %.3fs/%s)\n\n\n", sleep, elapsed.Seconds(), retryTimeout)
 		// Reset cache
-		sys = system.New(c)
+		sys = system.New(ctx.Package)
 		time.Sleep(sleep)
 		i++
 		fmt.Printf("Attempt #%d:\n", i)
