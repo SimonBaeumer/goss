@@ -15,74 +15,64 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
-func Serve(ctx app.CliContext) {
-	endpoint := ctx.Endpoint
-	color.NoColor = true
-	cache := cache.New(ctx.Cache, 30*time.Second)
+//TODO: Maybe seperating handler and server?
+type HealthHandler struct {
+	RunTimeConfig GossRunTime
+	C             app.CliContext
+	GossConfig    GossConfig
+	Sys           *system.System
+	Outputer      outputs.Outputer
+	Cache         *cache.Cache
+	GossMu        *sync.Mutex
+	ContentType   string
+	MaxConcurrent int
+	ListenAddr    string
+}
 
-	health := healthHandler{
-		c:             ctx,
-		gossConfig:    getGossConfig(ctx),
-		sys:           system.New(ctx.Package),
-		outputer:      getOutputer(ctx),
-		cache:         cache,
-		gossMu:        &sync.Mutex{},
-		maxConcurrent: ctx.MaxConcurrent,
-	}
-	if ctx.Format == "json" {
-		health.contentType = "application/json"
-	}
-	http.Handle(endpoint, health)
-	listenAddr := ctx.ListenAddr
-	log.Printf("Starting to listen on: %s", listenAddr)
-	log.Fatal(http.ListenAndServe(ctx.ListenAddr, nil))
+func (h *HealthHandler) Serve(endpoint string) {
+	color.NoColor = true
+
+	http.Handle(endpoint, h)
+	log.Printf("Starting to listen on: %s", h.ListenAddr)
+	log.Fatal(http.ListenAndServe(h.ListenAddr, nil))
 }
 
 type res struct {
 	exitCode int
 	b        bytes.Buffer
 }
-type healthHandler struct {
-	c             app.CliContext
-	gossConfig    GossConfig
-	sys           *system.System
-	outputer      outputs.Outputer
-	cache         *cache.Cache
-	gossMu        *sync.Mutex
-	contentType   string
-	maxConcurrent int
-}
 
-func (h healthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	outputConfig := util.OutputConfig{
-		FormatOptions: h.c.FormatOptions,
+		FormatOptions: h.C.FormatOptions,
 	}
+
 
 	log.Printf("%v: requesting health probe", r.RemoteAddr)
 	var resp res
-	tmp, found := h.cache.Get("res")
+	tmp, found := h.Cache.Get("res")
 	if found {
 		resp = tmp.(res)
 	} else {
-		h.gossMu.Lock()
-		defer h.gossMu.Unlock()
-		tmp, found := h.cache.Get("res")
+		h.GossMu.Lock()
+		defer h.GossMu.Unlock()
+		tmp, found := h.Cache.Get("res")
 		if found {
 			resp = tmp.(res)
 		} else {
-			h.sys = system.New(h.c.Package)
-			log.Printf("%v: Stale cache, running tests", r.RemoteAddr)
+			h.Sys = system.New(h.C.Package)
+			log.Printf("%v: Stale Cache, running tests", r.RemoteAddr)
 			iStartTime := time.Now()
-			out := validate(h.sys, h.gossConfig, h.maxConcurrent)
+			out := validate(h.Sys, h.GossConfig, h.MaxConcurrent)
 			var b bytes.Buffer
-			exitCode := h.outputer.Output(&b, out, iStartTime, outputConfig)
+			exitCode := h.Outputer.Output(&b, out, iStartTime, outputConfig)
 			resp = res{exitCode: exitCode, b: b}
-			h.cache.Set("res", resp, cache.DefaultExpiration)
+			h.Cache.Set("res", resp, cache.DefaultExpiration)
 		}
 	}
-	if h.contentType != "" {
-		w.Header().Set("Content-Type", h.contentType)
+	if h.ContentType != "" {
+		w.Header().Set("Content-Type", h.ContentType)
 	}
 	if resp.exitCode == 0 {
 		resp.b.WriteTo(w)

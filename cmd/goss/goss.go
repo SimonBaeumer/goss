@@ -3,8 +3,12 @@ package main
 import (
 	"fmt"
     app2 "github.com/SimonBaeumer/goss/internal/app"
-    "log"
+	"github.com/SimonBaeumer/goss/system"
+    "github.com/fatih/color"
+    "github.com/patrickmn/go-cache"
+	"log"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/SimonBaeumer/goss"
@@ -26,7 +30,7 @@ func main() {
 		cli.StringFlag{
 			Name:   "gossfile, g",
 			Value:  "./goss.yaml",
-			Usage:  "Goss file to read from / write to",
+			Usage:  "GossRunTime file to read from / write to",
 			EnvVar: "GOSS_FILE",
 		},
 		cli.StringFlag{
@@ -87,7 +91,26 @@ func main() {
 			},
 			Action: func(c *cli.Context) error {
                 ctx := app2.NewCliContext(c)
-				goss.Validate(ctx, startTime)
+
+				runtime := getGossRunTime(ctx)
+
+				v := &goss.Validator{
+					MaxConcurrent: ctx.MaxConcurrent,
+					Package:       ctx.Package,
+					Outputer:      outputs.GetOutputer(ctx.Format),
+					FormatOptions: ctx.FormatOptions,
+					GossConfig:    runtime.GetGossConfig(),
+				}
+
+				//TODO: ugly shit to set the color here, tmp fix for the moment!
+                if ctx.NoColor {
+                    color.NoColor = true
+                }
+                if ctx.Color {
+                    color.NoColor = false
+                }
+
+				v.Validate(startTime)
 				return nil
 			},
 		},
@@ -133,8 +156,25 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-			    ctx := app2.NewCliContext(c)
-				goss.Serve(ctx)
+				ctx := app2.NewCliContext(c)
+
+				gossRunTime := getGossRunTime(ctx)
+
+				h := &goss.HealthHandler{
+					Cache:         cache.New(ctx.Cache, 30*time.Second),
+					ListenAddr:    ctx.ListenAddr,
+					Outputer:      outputs.GetOutputer(ctx.Format),
+					Sys:           system.New(ctx.Package),
+					GossMu:        &sync.Mutex{},
+					MaxConcurrent: ctx.MaxConcurrent,
+					GossConfig:    gossRunTime.GetGossConfig(),
+				}
+
+				if ctx.Format == "json" {
+					h.ContentType = "application/json"
+				}
+
+				h.Serve(ctx.Endpoint)
 				return nil
 			},
 		},
@@ -158,8 +198,8 @@ func main() {
 			Aliases: []string{"aa"},
 			Usage:   "automatically add all matching resource to the test suite",
 			Action: func(c *cli.Context) error {
-                ctx := app2.NewCliContext(c)
-                goss.AutoAddResources(c.GlobalString("gossfile"), c.Args(), ctx)
+				ctx := app2.NewCliContext(c)
+				goss.AutoAddResources(c.GlobalString("gossfile"), c.Args(), ctx)
 				return nil
 			},
 		},
@@ -178,8 +218,8 @@ func main() {
 					Name:  "package",
 					Usage: "add new package",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Package", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Package", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -187,8 +227,8 @@ func main() {
 					Name:  "file",
 					Usage: "add new file",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "File", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "File", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -202,8 +242,8 @@ func main() {
 						},
 					},
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Addr", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Addr", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -211,8 +251,8 @@ func main() {
 					Name:  "port",
 					Usage: "add new listening [protocol]:port - ex: 80 or udp:123",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Port", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Port", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -220,8 +260,8 @@ func main() {
 					Name:  "service",
 					Usage: "add new service",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Service", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Service", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -229,8 +269,8 @@ func main() {
 					Name:  "user",
 					Usage: "add new user",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "User", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "User", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -238,8 +278,8 @@ func main() {
 					Name:  "group",
 					Usage: "add new group",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Group", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Group", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -253,8 +293,8 @@ func main() {
 						},
 					},
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Command", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Command", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -272,8 +312,8 @@ func main() {
 						},
 					},
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "DNS", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "DNS", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -281,7 +321,7 @@ func main() {
 					Name:  "process",
 					Usage: "add new process name",
 					Action: func(c *cli.Context) error {
-					    ctx := app2.NewCliContext(c)
+						ctx := app2.NewCliContext(c)
 						goss.AddResources(c.GlobalString("gossfile"), "Process", c.Args(), ctx)
 						return nil
 					},
@@ -301,21 +341,21 @@ func main() {
 							Value: 5 * time.Second,
 						},
 						cli.StringFlag{
-							Name: "username, u",
+							Name:  "username, u",
 							Usage: "Username for basic auth",
 						},
 						cli.StringFlag{
-							Name: "password, p",
+							Name:  "password, p",
 							Usage: "Password for basic auth",
 						},
 						cli.StringFlag{
-							Name: "header",
+							Name:  "header",
 							Usage: "Set-Cookie: Value",
 						},
 					},
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "HTTP", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "HTTP", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -323,8 +363,8 @@ func main() {
 					Name:  "goss",
 					Usage: "add new goss file, it will be imported from this one",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Gossfile", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Gossfile", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -332,8 +372,8 @@ func main() {
 					Name:  "kernel-param",
 					Usage: "add new goss kernel param",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "KernelParam", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "KernelParam", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -341,8 +381,8 @@ func main() {
 					Name:  "mount",
 					Usage: "add new mount",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Mount", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Mount", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -350,8 +390,8 @@ func main() {
 					Name:  "interface",
 					Usage: "add new interface",
 					Action: func(c *cli.Context) error {
-                        ctx := app2.NewCliContext(c)
-                        goss.AddResources(c.GlobalString("gossfile"), "Interface", c.Args(), ctx)
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Interface", c.Args(), ctx)
 						return nil
 					},
 				},
@@ -363,4 +403,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getGossRunTime(ctx app2.CliContext) goss.GossRunTime {
+	runtime := goss.GossRunTime{
+		Gossfile: ctx.Gossfile,
+		Vars:     ctx.Vars,
+		Package:  ctx.Package,
+	}
+	return runtime
 }

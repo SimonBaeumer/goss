@@ -138,7 +138,7 @@ func mergeJSONData(gossConfig GossConfig, depth int, path string) GossConfig {
 		fmt.Println("Error: Max depth of 50 reached, possibly due to dependency loop in goss file")
 		os.Exit(1)
 	}
-	// Our return gossConfig
+	// Our return GossConfig
 	ret := *NewGossConfig()
 	ret = mergeGoss(ret, gossConfig)
 

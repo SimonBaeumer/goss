@@ -1,95 +1,58 @@
 package goss
 
 import (
-	"fmt"
-	"github.com/SimonBaeumer/goss/internal/app"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"runtime"
-	"sync"
-	"time"
+    "fmt"
+    "os"
+    "runtime"
+    "sync"
+    "time"
 
-	"github.com/SimonBaeumer/goss/outputs"
-	"github.com/SimonBaeumer/goss/resource"
-	"github.com/SimonBaeumer/goss/system"
-	"github.com/SimonBaeumer/goss/util"
-	"github.com/fatih/color"
+    "github.com/SimonBaeumer/goss/outputs"
+    "github.com/SimonBaeumer/goss/resource"
+    "github.com/SimonBaeumer/goss/system"
+    "github.com/SimonBaeumer/goss/util"
+    "github.com/fatih/color"
 )
 
-func getGossConfig(ctx app.CliContext) GossConfig {
-	// handle stdin
-	var fh *os.File
-	var path, source string
-	var gossConfig GossConfig
-	TemplateFilter = NewTemplateFilter(ctx.Vars)
-	specFile := ctx.Gossfile
-	if specFile == "-" {
-		source = "STDIN"
-		fh = os.Stdin
-		data, err := ioutil.ReadAll(fh)
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			os.Exit(1)
-		}
-		OutStoreFormat = getStoreFormatFromData(data)
-		gossConfig = ReadJSONData(data, true)
-	} else {
-		source = specFile
-		path = filepath.Dir(specFile)
-		OutStoreFormat = getStoreFormatFromFileName(specFile)
-		gossConfig = ReadJSON(specFile)
-	}
-
-	gossConfig = mergeJSONData(gossConfig, 0, path)
-
-	if len(gossConfig.Resources()) == 0 {
-		fmt.Printf("Error: found 0 tests, source: %v\n", source)
-		os.Exit(1)
-	}
-	return gossConfig
-}
-
-func getOutputer(ctx app.CliContext) outputs.Outputer {
-	if ctx.NoColor {
-		color.NoColor = true
-	}
-	if ctx.Color {
-		color.NoColor = false
-	}
-	return outputs.GetOutputer(ctx.Format)
+type Validator struct {
+	GossConfig    GossConfig
+	RetryTimeout  time.Duration
+	Sleep         time.Duration
+	FormatOptions []string
+	Outputer      outputs.Outputer
+	Package       string //Should be in the package resource config
+	MaxConcurrent int    //Separating concurrency and validation, irritating atm...
 }
 
 // Validate validation runtime
-func Validate(ctx app.CliContext, startTime time.Time) {
+func (v *Validator) Validate(startTime time.Time) {
 
 	outputConfig := util.OutputConfig{
-		FormatOptions: ctx.FormatOptions,
+		FormatOptions: v.FormatOptions,
 	}
 
-	gossConfig := getGossConfig(ctx)
-	sys := system.New(ctx.Package)
-	outputer := getOutputer(ctx)
+	sys := system.New(v.Package)
 
-	sleep := ctx.Sleep
-	retryTimeout := ctx.RetryTimeout
 	i := 1
 	for {
 		iStartTime := time.Now()
-		out := validate(sys, gossConfig, ctx.MaxConcurrent)
-		exitCode := outputer.Output(os.Stdout, out, iStartTime, outputConfig)
-		if retryTimeout == 0 || exitCode == 0 {
+
+		out := validate(sys, v.GossConfig, v.MaxConcurrent)
+		exitCode := v.Outputer.Output(os.Stdout, out, iStartTime, outputConfig)
+		if v.RetryTimeout == 0 || exitCode == 0 {
 			os.Exit(exitCode)
 		}
+
 		elapsed := time.Since(startTime)
-		if elapsed+sleep > retryTimeout {
-			color.Red("\nERROR: Timeout of %s reached before tests entered a passing state", retryTimeout)
+		if elapsed + v.Sleep > v.RetryTimeout {
+			color.Red("\nERROR: Timeout of %s reached before tests entered a passing state", v.RetryTimeout)
 			os.Exit(3)
 		}
-		color.Red("Retrying in %s (elapsed/timeout time: %.3fs/%s)\n\n\n", sleep, elapsed.Seconds(), retryTimeout)
-		// Reset cache
-		sys = system.New(ctx.Package)
-		time.Sleep(sleep)
+		color.Red("Retrying in %s (elapsed/timeout time: %.3fs/%s)\n\n\n", v.Sleep, elapsed.Seconds(), v.RetryTimeout)
+
+		// Reset Cache
+		sys = system.New(v.Package)
+		time.Sleep(v.Sleep)
 		i++
 		fmt.Printf("Attempt #%d:\n", i)
 	}
