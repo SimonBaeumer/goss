@@ -9,6 +9,11 @@ DIRS=$(ls -ld */ . | awk {'print $9'} | grep -v vendor)
 for DIR in ${DIRS}; do
     GOFILES=$(git ls-files ${DIR} | grep ".*\.go$") || true
 
+    # ignore dev directory...
+    if [[ ${DIR} == "development/" ]]; then
+        continue
+    fi
+
     if [[ ${DIR} == "."  ]]; then
         echo "."
         continue
