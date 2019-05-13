@@ -110,7 +110,7 @@ func main() {
                     color.NoColor = false
                 }
 
-				v.Validate(startTime)
+				os.Exit(v.Validate(startTime))
 				return nil
 			},
 		},

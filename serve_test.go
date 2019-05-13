@@ -18,7 +18,6 @@ func TestHealthHandler_Serve(t *testing.T) {
         t.Fatal(err)
     }
 
-    //var cmdResource resource.Resource
     cmdResource := &resource.Command{
         Command: "echo hello",
         Title: "echo hello",
