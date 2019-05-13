@@ -42,12 +42,12 @@ type res struct {
 	b        bytes.Buffer
 }
 
+//ServeHTTP fulfills the handler interface and is called as a handler on the
+//health check request.
 func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	outputConfig := util.OutputConfig{
 		FormatOptions: h.C.FormatOptions,
 	}
-
 
 	log.Printf("%v: requesting health probe", r.RemoteAddr)
 	var resp res
