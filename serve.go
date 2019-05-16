@@ -61,7 +61,7 @@ func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if found {
 			resp = tmp.(res)
 		} else {
-			h.Sys = system.New(h.C.Package)
+			h.Sys = system.New()
 			log.Printf("%v: Stale Cache, running tests", r.RemoteAddr)
 			iStartTime := time.Now()
 			out := validate(h.Sys, h.GossConfig, h.MaxConcurrent)

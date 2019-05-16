@@ -7,6 +7,7 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+//PackmanPackage represents a package inside the pacman manager
 type PacmanPackage struct {
 	name      string
 	versions  []string
@@ -14,7 +15,8 @@ type PacmanPackage struct {
 	installed bool
 }
 
-func NewPacmanPackage(name string, system *System, config util.Config) Package {
+//NewPacmanPackage creates a new pacman manager
+func NewPacmanPackage(name string) Package {
 	return &PacmanPackage{name: name}
 }
 
@@ -34,18 +36,22 @@ func (p *PacmanPackage) setup() {
 	p.versions = []string{strings.Fields(cmd.Stdout.String())[1]}
 }
 
+// Name returns the name of the package
 func (p *PacmanPackage) Name() string {
 	return p.name
 }
 
+// Exists returns if the package is installed
 func (p *PacmanPackage) Exists() (bool, error) { return p.Installed() }
 
+// Installed will check and returns if the package is installed
 func (p *PacmanPackage) Installed() (bool, error) {
 	p.setup()
 
 	return p.installed, nil
 }
 
+// Versions returns all installed versions of the package
 func (p *PacmanPackage) Versions() ([]string, error) {
 	p.setup()
 	if len(p.versions) == 0 {

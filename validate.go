@@ -36,7 +36,7 @@ func (v *Validator) Validate(startTime time.Time) int {
 		FormatOptions: v.FormatOptions,
 	}
 
-	sys := system.New(v.Package)
+	sys := system.New()
 
 	i := 1
 	for {
@@ -56,7 +56,7 @@ func (v *Validator) Validate(startTime time.Time) int {
 		color.Red("Retrying in %s (elapsed/timeout time: %.3fs/%s)\n\n\n", v.Sleep, elapsed.Seconds(), v.RetryTimeout)
 
 		// Reset Cache
-		sys = system.New(v.Package)
+		sys = system.New()
 		time.Sleep(v.Sleep)
 		i++
 		fmt.Printf("Attempt #%d:\n", i)

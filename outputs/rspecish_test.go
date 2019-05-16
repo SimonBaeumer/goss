@@ -42,4 +42,3 @@ Count: 1, Failed: 0, Skipped: 0
     assert.Equal(t, expectedJson, b.String())
     assert.Equal(t, 0, r)
 }
-

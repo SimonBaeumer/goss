@@ -164,7 +164,7 @@ func main() {
 					Cache:         cache.New(ctx.Cache, 30*time.Second),
 					ListenAddr:    ctx.ListenAddr,
 					Outputer:      outputs.GetOutputer(ctx.Format),
-					Sys:           system.New(ctx.Package),
+					Sys:           system.New(),
 					GossMu:        &sync.Mutex{},
 					MaxConcurrent: ctx.MaxConcurrent,
 					GossConfig:    gossRunTime.GetGossConfig(),
@@ -214,15 +214,6 @@ func main() {
 				},
 			},
 			Subcommands: []cli.Command{
-				{
-					Name:  "package",
-					Usage: "add new package",
-					Action: func(c *cli.Context) error {
-						ctx := app2.NewCliContext(c)
-						goss.AddResources(c.GlobalString("gossfile"), "Package", c.Args(), ctx)
-						return nil
-					},
-				},
 				{
 					Name:  "file",
 					Usage: "add new file",
