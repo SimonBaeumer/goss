@@ -3,6 +3,7 @@ package resource
 import (
     "github.com/SimonBaeumer/goss/system"
     "github.com/SimonBaeumer/goss/util"
+    "github.com/SimonBaeumer/goss/util/goss_testing"
     "github.com/stretchr/testify/assert"
     "testing"
 )
@@ -35,7 +36,7 @@ func TestNewDNS_WithoutQType(t *testing.T) {
 }
 
 func TestDNS_Validate(t *testing.T) {
-    addrs := convertToInterfaceSlice()
+    addrs := goss_testing.ConvertStringSliceToInterfaceSlice([]string{"localhost:53"})
 
     mockDns := MockSysDNS{}
     dns, _ := NewDNS(mockDns, conf)
@@ -62,7 +63,7 @@ func TestDNS_Validate(t *testing.T) {
 }
 
 func TestDNS_ValidateFail(t *testing.T) {
-    addrs := convertToInterfaceSlice()
+    addrs := goss_testing.ConvertStringSliceToInterfaceSlice([]string{"localhost:53"})
 
     mockDns := MockSysDNS{}
     dns, _ := NewDNS(mockDns, conf)
@@ -89,17 +90,6 @@ func TestDNS_ValidateFail(t *testing.T) {
 to contain element matching
     <string>: localhost:53`
     assert.Equal(t, expectedHuman, r[1].Human)
-}
-
-func convertToInterfaceSlice() []interface{} {
-    // Create expected addrs as interface{} slice
-    // It is necessary to allocate the memory before, because []interface{} is of an unknown size
-    var expect = []string{"localhost:53"}
-    var addrs = make([]interface{}, len(expect))
-    for i, char := range expect {
-        addrs[i] = char
-    }
-    return addrs
 }
 
 //MockSysDNS mocks the DNS system interface

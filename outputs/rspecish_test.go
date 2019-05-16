@@ -4,7 +4,6 @@ import (
     "bytes"
     "github.com/SimonBaeumer/goss/resource"
     "github.com/SimonBaeumer/goss/util"
-    "github.com/SimonBaeumer/goss/util/goss_testing"
     "github.com/stretchr/testify/assert"
     "sync"
     "testing"
@@ -30,7 +29,7 @@ func TestRspecish_Output(t *testing.T) {
         r = j.Output(b, out, time.Now(), util.OutputConfig{})
     }()
 
-    out <- goss_testing.GetExampleTestResult()
+    out <- GetExampleTestResult()
 
     close(out)
     wg.Wait()

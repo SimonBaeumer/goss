@@ -1,21 +1,11 @@
 package goss_testing
 
-import (
-    "github.com/SimonBaeumer/goss/resource"
-    "time"
-)
-
-func GetExampleTestResult() []resource.TestResult {
-    return []resource.TestResult{
-        {
-            Title: "my title",
-            Duration: time.Duration(500),
-            Successful: true,
-            ResourceType: "resource type",
-            ResourceId: "my resource id",
-            Property: "a property",
-            Expected: []string{"expected"},
-        },
+//ConvertStringSliceToInterfaceSlice is a helper function to match
+// system interfaces
+func ConvertStringSliceToInterfaceSlice(strings []string) []interface{} {
+    var iStrings = make([]interface{}, len(strings))
+    for i, char := range strings {
+        iStrings[i] = char
     }
-
+    return iStrings
 }

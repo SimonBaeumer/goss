@@ -10,7 +10,6 @@ type CliContext struct {
     Sleep time.Duration
     RetryTimeout time.Duration
     MaxConcurrent int
-    Package string
     Vars string
     Gossfile string
     ExcludeAttr []string
@@ -34,7 +33,6 @@ func NewCliContext(c *cli.Context) CliContext {
         FormatOptions: c.StringSlice("format-options"),
         Sleep: c.Duration("sleep"),
         RetryTimeout: c.Duration("retry-timeout"),
-        Package: c.String("package"),
         MaxConcurrent: c.Int("max-concurrent"),
         Vars: c.GlobalString("vars"),
         Gossfile: c.GlobalString("gossfile"),

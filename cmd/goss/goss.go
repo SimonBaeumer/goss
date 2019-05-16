@@ -38,10 +38,6 @@ func main() {
 			Usage:  "json/yaml file containing variables for template",
 			EnvVar: "GOSS_VARS",
 		},
-		cli.StringFlag{
-			Name:  "package",
-			Usage: "Package type to use [rpm, deb, apk, pacman]",
-		},
 	}
 	app.Commands = []cli.Command{
 		{
@@ -214,6 +210,15 @@ func main() {
 				},
 			},
 			Subcommands: []cli.Command{
+				{
+					Name:  "package",
+					Usage: "add new package",
+					Action: func(c *cli.Context) error {
+						ctx := app2.NewCliContext(c)
+						goss.AddResources(c.GlobalString("gossfile"), "Package", c.Args(), ctx)
+						return nil
+					},
+				},
 				{
 					Name:  "file",
 					Usage: "add new file",
@@ -400,7 +405,6 @@ func getGossRunTime(ctx app2.CliContext) goss.GossRunTime {
 	runtime := goss.GossRunTime{
 		Gossfile: ctx.Gossfile,
 		Vars:     ctx.Vars,
-		Package:  ctx.Package,
 	}
 	return runtime
 }
