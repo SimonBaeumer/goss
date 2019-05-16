@@ -88,7 +88,6 @@ func validate(sys *system.System, gossConfig GossConfig, maxConcurrent int) <-ch
 			for res := range in {
 				out <- res.Validate(sys)
 			}
-
 		}()
 	}
 

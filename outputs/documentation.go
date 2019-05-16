@@ -9,7 +9,14 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
-type Documentation struct{}
+// Documentation represents the documentation output type
+type Documentation struct{
+	//FakeDuration will only be used for testing purposes
+	FakeDuration time.Duration
+}
+
+// Name returns the name
+func (r Documentation) Name() string { return "documentation" }
 
 func (r Documentation) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
@@ -47,7 +54,11 @@ func (r Documentation) Output(w io.Writer, results <-chan []resource.TestResult,
 	fmt.Fprint(w, "\n\n")
 	fmt.Fprint(w, failedOrSkippedSummary(failedOrSkipped))
 
-	fmt.Fprint(w, summary(startTime, testCount, failed, skipped))
+	duration := time.Since(startTime)
+	if r.FakeDuration != 0 {
+		duration = r.FakeDuration
+	}
+	fmt.Fprint(w, summary(duration.Seconds(), testCount, failed, skipped))
 	if failed > 0 {
 		return 1
 	}

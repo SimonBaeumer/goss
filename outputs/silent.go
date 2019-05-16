@@ -8,8 +8,13 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+// Silent represents the silent output type
 type Silent struct{}
 
+// Name returns the name
+func (r Silent) Name() string { return "silent" }
+
+// Output writes the actual output
 func (r Silent) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 

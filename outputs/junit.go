@@ -13,8 +13,13 @@ import (
 	"github.com/fatih/color"
 )
 
+// JUnit represents the junit output type
 type JUnit struct{}
 
+// Name returns the name
+func (r JUnit) Name() string { return "junit" }
+
+// Output writes the actual output
 func (r JUnit) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 

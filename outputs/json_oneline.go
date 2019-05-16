@@ -11,8 +11,13 @@ import (
 	"github.com/fatih/color"
 )
 
+// JsonOneline represents the JsonOneline output type
 type JsonOneline struct{}
 
+// Name returns the name
+func (r JsonOneline) Name() string { return "json_oneline" }
+
+// Output writes the actual output
 func (r JsonOneline) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 

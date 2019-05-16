@@ -11,8 +11,16 @@ import (
 	"github.com/fatih/color"
 )
 
-type Json struct{}
+// Json represents the json output type
+type Json struct{
+	// FakeDuration will only be used for testing purposes
+	FakeDuration time.Duration
+}
 
+// Name returns the name
+func (r Json) Name() string { return "json" }
+
+// Output writes the actual output
 func (r Json) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 
@@ -35,6 +43,10 @@ func (r Json) Output(w io.Writer, results <-chan []resource.TestResult,
 
 	summary := make(map[string]interface{})
 	duration := time.Since(startTime)
+	if r.FakeDuration != 0 {
+		duration = r.FakeDuration
+	}
+
 	summary["test-count"] = testCount
 	summary["failed-count"] = failed
 	summary["total-duration"] = duration

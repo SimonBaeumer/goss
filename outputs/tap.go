@@ -10,8 +10,13 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+// Tap represents the tap output type
 type Tap struct{}
 
+// Name returns the name
+func (r Tap) Name() string { return "tap" }
+
+// Output writes the actual output
 func (r Tap) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 
