@@ -45,6 +45,16 @@ func (g *GossRunTime) GetGossConfig() GossConfig {
         }
         OutStoreFormat = getStoreFormatFromData(data)
         gossConfig = ReadJSONData(data, true)
+    } else if specFile == "testing" {
+        json := []byte(`
+command:
+  echo hello:
+    exit-status: 0
+    stdout: 
+      - hello
+    timeout: 10000
+`)
+        gossConfig = ReadJSONData(json, true)
     } else {
         source = specFile
         path = filepath.Dir(specFile)
