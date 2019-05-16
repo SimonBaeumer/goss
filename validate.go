@@ -21,7 +21,6 @@ type Validator struct {
 	Sleep         time.Duration
 	FormatOptions []string
 	Outputer      outputs.Outputer
-	Package       string //Should be in the package resource config
 	MaxConcurrent int    //Separating concurrency and validation, irritating atm...
 	OutputWriter  io.Writer
 }

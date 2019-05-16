@@ -92,7 +92,6 @@ func main() {
 
 				v := &goss.Validator{
 					MaxConcurrent: ctx.MaxConcurrent,
-					Package:       ctx.Package,
 					Outputer:      outputs.GetOutputer(ctx.Format),
 					FormatOptions: ctx.FormatOptions,
 					GossConfig:    runtime.GetGossConfig(),
