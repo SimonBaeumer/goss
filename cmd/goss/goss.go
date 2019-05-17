@@ -50,7 +50,7 @@ func createApp() *cli.App {
     app.Commands = []cli.Command{
         createValidateCommand(app),
         createServeCommand(),
-        createAddCommand(),
+        createAddCommand(app),
         {
             Name:    "render",
             Aliases: []string{"r"},
@@ -71,9 +71,12 @@ func createApp() *cli.App {
             Aliases: []string{"aa"},
             Usage:   "automatically add all matching resource to the test suite",
             Action: func(c *cli.Context) error {
-                ctx := app2.NewCliContext(c)
-                goss.AutoAddResources(c.GlobalString("gossfile"), c.Args(), ctx)
-                return nil
+                a := goss.Add{
+                    Ctx: app2.NewCliContext(c),
+                    Writer: app.Writer,
+                    Sys: system.New(),
+                }
+                return a.AutoAddResources(c.GlobalString("gossfile"), c.Args())
             },
         },
     }
@@ -146,7 +149,20 @@ func createServeCommand() cli.Command {
     }
 }
 
-func createAddCommand() cli.Command {
+func createAddHandler(app *cli.App, resourceName string) (func(c *cli.Context) error) {
+    return func(c *cli.Context) error {
+        a := goss.Add{
+            Sys: system.New(),
+            Writer: app.Writer,
+        }
+
+        a.Ctx = app2.NewCliContext(c)
+        a.AddResources(c.GlobalString("gossfile"), resourceName, c.Args())
+        return nil
+    }
+}
+
+func createAddCommand(app *cli.App) cli.Command {
     return cli.Command{
         Name:    "add",
         Aliases: []string{"a"},
@@ -159,22 +175,14 @@ func createAddCommand() cli.Command {
         },
         Subcommands: []cli.Command{
             {
-                Name:  "package",
+                Name:  "Package",
                 Usage: "add new package",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Package", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "package"),
             },
             {
                 Name:  "file",
                 Usage: "add new file",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "File", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "file"),
             },
             {
                 Name:  "addr",
@@ -185,47 +193,27 @@ func createAddCommand() cli.Command {
                         Value: 500 * time.Millisecond,
                     },
                 },
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Addr", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "addr"),
             },
             {
                 Name:  "port",
                 Usage: "add new listening [protocol]:port - ex: 80 or udp:123",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Port", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "port"),
             },
             {
                 Name:  "service",
                 Usage: "add new service",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Service", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "service"),
             },
             {
                 Name:  "user",
                 Usage: "add new user",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "User", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "user"),
             },
             {
                 Name:  "group",
                 Usage: "add new group",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Group", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "group"),
             },
             {
                 Name:  "command",
@@ -236,11 +224,7 @@ func createAddCommand() cli.Command {
                         Value: 10 * time.Second,
                     },
                 },
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Command", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "command"),
             },
             {
                 Name:  "dns",
@@ -255,20 +239,12 @@ func createAddCommand() cli.Command {
                         Usage: "The IP address of a DNS server to query",
                     },
                 },
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "DNS", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "dns"),
             },
             {
                 Name:  "process",
                 Usage: "add new process name",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Process", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "process"),
             },
             {
                 Name:  "http",
@@ -297,47 +273,27 @@ func createAddCommand() cli.Command {
                         Usage: "Set-Cookie: Value",
                     },
                 },
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "HTTP", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "http"),
             },
             {
                 Name:  "goss",
                 Usage: "add new goss file, it will be imported from this one",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Gossfile", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "goss"),
             },
             {
                 Name:  "kernel-param",
                 Usage: "add new goss kernel param",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "KernelParam", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "kernel-param"),
             },
             {
                 Name:  "mount",
                 Usage: "add new mount",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Mount", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "mount"),
             },
             {
                 Name:  "interface",
                 Usage: "add new interface",
-                Action: func(c *cli.Context) error {
-                    ctx := app2.NewCliContext(c)
-                    goss.AddResources(c.GlobalString("gossfile"), "Interface", c.Args(), ctx)
-                    return nil
-                },
+                Action: createAddHandler(app, "interface"),
             },
         },
     }

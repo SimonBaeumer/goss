@@ -7,13 +7,11 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 	"sort"
 	"strings"
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/SimonBaeumer/goss/resource"
 	"github.com/urfave/cli"
 )
 
@@ -199,16 +197,6 @@ func WriteJSON(filePath string, gossConfig GossConfig) error {
 	}
 
 	return nil
-}
-
-func resourcePrint(fileName string, res resource.ResourceRead) {
-	resMap := map[string]resource.ResourceRead{res.ID(): res}
-
-	oj, _ := marshal(resMap)
-	typ := reflect.TypeOf(res)
-	typs := strings.Split(typ.String(), ".")[1]
-
-	fmt.Printf("Adding %s to '%s':\n\n%s\n\n", typs, fileName, string(oj))
 }
 
 func marshal(gossConfig interface{}) ([]byte, error) {
