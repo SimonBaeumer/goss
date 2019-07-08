@@ -14,8 +14,10 @@ import (
 	"github.com/fatih/color"
 )
 
+// Outputer is the interface which is used for the generation of the view
 type Outputer interface {
 	Output(io.Writer, <-chan []resource.TestResult, time.Time, util.OutputConfig) int
+	Name() string
 }
 
 var green = color.New(color.FgGreen).SprintfFunc()
@@ -84,6 +86,7 @@ var (
 	outputerFormatOptions = make(map[string][]string)
 )
 
+// RegisterOutputer registers a new outputer in the registry
 func RegisterOutputer(name string, outputer Outputer, formatOptions []string) {
 	outputersMu.Lock()
 	defer outputersMu.Unlock()
@@ -125,6 +128,7 @@ func FormatOptions() []string {
 	return list
 }
 
+//GetOutputer returns an outputer by name
 func GetOutputer(name string) Outputer {
 	if _, ok := outputers[name]; !ok {
 		fmt.Println("goss: Bad output format: " + name)
@@ -171,9 +175,9 @@ func header(t resource.TestResult) string {
 	return out
 }
 
-func summary(startTime time.Time, count, failed, skipped int) string {
+func summary(duration float64, count, failed, skipped int) string {
 	var s string
-	s += fmt.Sprintf("Total Duration: %.3fs\n", time.Since(startTime).Seconds())
+	s += fmt.Sprintf("Total Duration: %.3fs\n", duration)
 	f := green
 	if failed > 0 {
 		f = red
@@ -181,6 +185,7 @@ func summary(startTime time.Time, count, failed, skipped int) string {
 	s += f("Count: %d, Failed: %d, Skipped: %d\n", count, failed, skipped)
 	return s
 }
+
 func failedOrSkippedSummary(failedOrSkipped [][]resource.TestResult) string {
 	var s string
 	if len(failedOrSkipped) > 0 {

@@ -10,8 +10,13 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+// Nagios represents the nagios output type
 type Nagios struct{}
 
+// Name returns the name
+func (r Nagios) Name() string { return "nagios" }
+
+// Output writes the actual output
 func (r Nagios) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 

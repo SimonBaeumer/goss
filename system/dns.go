@@ -64,6 +64,7 @@ func (d *DefDNS) Server() string {
 func (d *DefDNS) Qtype() string {
 	return d.qtype
 }
+
 // setup executes the dns lookup
 func (d *DefDNS) setup() error {
 	if d.loaded {

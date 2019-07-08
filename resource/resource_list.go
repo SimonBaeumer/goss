@@ -18,6 +18,7 @@ import (
 //go:generate goimports -w resource_list.go resource_list.go
 
 type AddrMap map[string]*Addr
+
 var BlacklistedAutoAddHeaders = [...]string{"Set-Cookie", "set-cookie", "Date", "date"}
 
 func (r AddrMap) AppendSysResource(sr string, sys *system.System, config util.Config) (*Addr, error) {
@@ -621,7 +622,7 @@ func (ret *GroupMap) UnmarshalYAML(unmarshal func(v interface{}) error) error {
 type PackageMap map[string]*Package
 
 func (r PackageMap) AppendSysResource(sr string, sys *system.System, config util.Config) (*Package, error) {
-	sysres := sys.NewPackage(sr, sys, config)
+	sysres := sys.NewPackage(sr, "")
 	res, err := NewPackage(sysres, config)
 	if err != nil {
 		return nil, err
@@ -635,7 +636,7 @@ func (r PackageMap) AppendSysResource(sr string, sys *system.System, config util
 }
 
 func (r PackageMap) AppendSysResourceIfExists(sr string, sys *system.System) (*Package, system.Package, bool) {
-	sysres := sys.NewPackage(sr, sys, util.Config{})
+	sysres := sys.NewPackage(sr, "")
 	// FIXME: Do we want to be silent about errors?
 	res, _ := NewPackage(sysres, util.Config{})
 	if e, _ := sysres.Exists(); e != true {

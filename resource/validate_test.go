@@ -1,10 +1,10 @@
 package resource
 
 import (
-    "fmt"
-    "io"
-    "strings"
-    "testing"
+	"fmt"
+	"io"
+	"strings"
+	"testing"
 )
 
 type FakeResource struct {

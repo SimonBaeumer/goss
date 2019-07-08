@@ -3,30 +3,30 @@ package resource
 import (
 	"crypto/tls"
 	"github.com/SimonBaeumer/goss/system"
-    "github.com/SimonBaeumer/goss/util"
+	"github.com/SimonBaeumer/goss/util"
 	"log"
 	"reflect"
-    "strings"
-    "time"
+	"strings"
+	"time"
 )
 
 const TimeoutMS = 5000
 
 type HTTP struct {
-	Title             string   			  	`json:"title,omitempty" yaml:"title,omitempty"`
-	Meta              meta     			  	`json:"meta,omitempty" yaml:"meta,omitempty"`
-	HTTP              string   			  	`json:"-" yaml:"-"`
-	Status            matcher  			  	`json:"status" yaml:"status"`
-	AllowInsecure     bool     			  	`json:"allow-insecure" yaml:"allow-insecure"`
-	NoFollowRedirects bool     			  	`json:"no-follow-redirects" yaml:"no-follow-redirects"`
-	Timeout           int      			  	`json:"timeout" yaml:"timeout"`
-	Body              []string 			  	`json:"body" yaml:"body"`
-	Username          string   			  	`json:"username,omitempty" yaml:"username,omitempty"`
-	Password          string   			  	`json:"password,omitempty" yaml:"password,omitempty"`
-	Headers			  map[string][]string   `json:"headers,omitempty" yaml:"headers,omitempty"`
-	RequestHeaders 	  map[string][]string   `json:"request-headers,omitempty" yaml:"request-headers,omitempty"`
-	Cert              string                `json:"cert,omitempty" yaml:"cert,omitempty"`
-	Key               string                `json:"key,omitempty" yaml:"key,omitempty"`
+	Title             string              `json:"title,omitempty" yaml:"title,omitempty"`
+	Meta              meta                `json:"meta,omitempty" yaml:"meta,omitempty"`
+	HTTP              string              `json:"-" yaml:"-"`
+	Status            matcher             `json:"status" yaml:"status"`
+	AllowInsecure     bool                `json:"allow-insecure" yaml:"allow-insecure"`
+	NoFollowRedirects bool                `json:"no-follow-redirects" yaml:"no-follow-redirects"`
+	Timeout           int                 `json:"timeout" yaml:"timeout"`
+	Body              []string            `json:"body" yaml:"body"`
+	Username          string              `json:"username,omitempty" yaml:"username,omitempty"`
+	Password          string              `json:"password,omitempty" yaml:"password,omitempty"`
+	Headers           map[string][]string `json:"headers,omitempty" yaml:"headers,omitempty"`
+	RequestHeaders    map[string][]string `json:"request-headers,omitempty" yaml:"request-headers,omitempty"`
+	Cert              string              `json:"cert,omitempty" yaml:"cert,omitempty"`
+	Key               string              `json:"key,omitempty" yaml:"key,omitempty"`
 }
 
 func (u *HTTP) ID() string      { return u.HTTP }
@@ -75,9 +75,9 @@ func (u *HTTP) Validate(sys *system.System) []TestResult {
 }
 
 func (u *HTTP) loadClientCertificate() tls.Certificate {
-    if u.Cert == "" || u.Key == "" {
-        return tls.Certificate{}
-    }
+	if u.Cert == "" || u.Key == "" {
+		return tls.Certificate{}
+	}
 
 	cert, err := tls.LoadX509KeyPair(u.Cert, u.Key)
 	if err != nil {
@@ -101,13 +101,12 @@ func NewHTTP(sysHTTP system.HTTP, config util.Config) (*HTTP, error) {
 		AllowInsecure:     config.AllowInsecure,
 		NoFollowRedirects: config.NoFollowRedirects,
 		Timeout:           config.Timeout,
-		Username:		   config.Username,
+		Username:          config.Username,
 		Password:          config.Password,
-		Headers:		   headers,
+		Headers:           headers,
 	}
 	return u, err
 }
-
 
 func validateHeader(res ResourceRead, property string, expectedHeaders map[string][]string, actualHeaders system.Header, skip bool) TestResult {
 	id := res.ID()

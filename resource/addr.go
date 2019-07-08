@@ -7,6 +7,7 @@ import (
 
 const DefaultTimeoutMS = 500
 
+// Addr resource validates a addr, i.e. tcp://127.0.0.1:80
 type Addr struct {
 	Title     string  `json:"title,omitempty" yaml:"title,omitempty"`
 	Meta      meta    `json:"meta,omitempty" yaml:"meta,omitempty"`

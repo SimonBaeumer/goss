@@ -14,7 +14,7 @@ type AlpinePackage struct {
 	installed bool
 }
 
-func NewAlpinePackage(name string, system *System, config util.Config) Package {
+func NewAlpinePackage(name string) Package {
 	return &AlpinePackage{name: name}
 }
 

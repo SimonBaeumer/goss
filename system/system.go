@@ -7,11 +7,10 @@ import (
 	"os/exec"
 	"sync"
 
+	util2 "github.com/SimonBaeumer/goss/util"
 	"github.com/aelsabbahy/GOnetstat"
 	// This needs a better name
 	"github.com/aelsabbahy/go-ps"
-	util2 "github.com/SimonBaeumer/goss/util"
-	"github.com/urfave/cli"
 )
 
 type Resource interface {
@@ -20,7 +19,7 @@ type Resource interface {
 
 // System holds all constructor functions for each
 type System struct {
-	NewPackage     func(string, *System, util2.Config) Package
+	NewPackage     func(string, string) Package
 	NewFile        func(string, *System, util2.Config) File
 	NewAddr        func(string, *System, util2.Config) Addr
 	NewPort        func(string, *System, util2.Config) Port
@@ -55,8 +54,10 @@ func (s *System) ProcMap() map[string][]ps.Process {
 	return s.procMap
 }
 
-func New(c *cli.Context) *System {
+//New creates the system object which holds all constructors for the system packages
+func New() *System {
 	sys := &System{
+		NewPackage:     NewPackage,
 		NewFile:        NewDefFile,
 		NewAddr:        NewDefAddr,
 		NewPort:        NewDefPort,
@@ -72,26 +73,7 @@ func New(c *cli.Context) *System {
 		NewHTTP:        NewDefHTTP,
 	}
 	sys.detectService()
-	sys.detectPackage(c)
 	return sys
-}
-
-// DetectPackage adds the correct package creation function to a System struct
-func (sys *System) detectPackage(c *cli.Context) {
-	p := c.GlobalString("package")
-	if p != "deb" && p != "apk" && p != "pacman" && p != "rpm" {
-		p = DetectPackageManager()
-	}
-	switch p {
-	case "deb":
-		sys.NewPackage = NewDebPackage
-	case "apk":
-		sys.NewPackage = NewAlpinePackage
-	case "pacman":
-		sys.NewPackage = NewPacmanPackage
-	default:
-		sys.NewPackage = NewRpmPackage
-	}
 }
 
 // DetectService adds the correct service creation function to a System struct
@@ -106,31 +88,6 @@ func (sys *System) detectService() {
 	default:
 		sys.NewService = NewServiceInit
 	}
-}
-
-// DetectPackageManager attempts to detect whether or not the system is using
-// "deb", "rpm", "apk", or "pacman" package managers. It first attempts to
-// detect the distro. If that fails, it falls back to finding package manager
-// executables. If that fails, it returns the empty string.
-func DetectPackageManager() string {
-	switch DetectDistro() {
-	case "ubuntu":
-		return "deb"
-	case "redhat":
-		return "rpm"
-	case "alpine":
-		return "apk"
-	case "arch":
-		return "pacman"
-	case "debian":
-		return "deb"
-	}
-	for _, manager := range []string{"deb", "rpm", "apk", "pacman"} {
-		if HasCommand(manager) {
-			return manager
-		}
-	}
-	return ""
 }
 
 // DetectService attempts to detect what kind of service management the system

@@ -7,14 +7,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 	"sort"
 	"strings"
 
 	"gopkg.in/yaml.v2"
-
-	"github.com/SimonBaeumer/goss/resource"
-	"github.com/urfave/cli"
 )
 
 const (
@@ -92,7 +88,7 @@ func varsFromFile(varsFile string) (map[string]interface{}, error) {
 	return vars, nil
 }
 
-// Reads json byte array returning GossConfig
+// ReadJSONData reads json byte array returning GossConfig
 func ReadJSONData(data []byte, detectFormat bool) GossConfig {
 	if TemplateFilter != nil {
 		data = TemplateFilter(data)
@@ -115,15 +111,12 @@ func ReadJSONData(data []byte, detectFormat bool) GossConfig {
 	return *gossConfig
 }
 
-// Reads json file recursively returning string
-func RenderJSON(c *cli.Context) string {
-	filePath := c.GlobalString("gossfile")
-	varsFile := c.GlobalString("vars")
-	debug = c.Bool("debug")
-	TemplateFilter = NewTemplateFilter(varsFile)
-	path := filepath.Dir(filePath)
-	OutStoreFormat = getStoreFormatFromFileName(filePath)
-	gossConfig := mergeJSONData(ReadJSON(filePath), 0, path)
+// RenderJSON reads json file recursively returning string
+func RenderJSON(gossfile *os.File, vars *os.File) string {
+	TemplateFilter = NewTemplateFilter(vars.Name())
+	path := filepath.Dir(gossfile.Name())
+	OutStoreFormat = getStoreFormatFromFileName(gossfile.Name())
+	gossConfig := mergeJSONData(ReadJSON(gossfile.Name()), 0, path)
 
 	b, err := marshal(gossConfig)
 	if err != nil {
@@ -138,7 +131,7 @@ func mergeJSONData(gossConfig GossConfig, depth int, path string) GossConfig {
 		fmt.Println("Error: Max depth of 50 reached, possibly due to dependency loop in goss file")
 		os.Exit(1)
 	}
-	// Our return gossConfig
+	// Our return GossConfig
 	ret := *NewGossConfig()
 	ret = mergeGoss(ret, gossConfig)
 
@@ -199,16 +192,6 @@ func WriteJSON(filePath string, gossConfig GossConfig) error {
 	}
 
 	return nil
-}
-
-func resourcePrint(fileName string, res resource.ResourceRead) {
-	resMap := map[string]resource.ResourceRead{res.ID(): res}
-
-	oj, _ := marshal(resMap)
-	typ := reflect.TypeOf(res)
-	typs := strings.Split(typ.String(), ".")[1]
-
-	fmt.Printf("Adding %s to '%s':\n\n%s\n\n", typs, fileName, string(oj))
 }
 
 func marshal(gossConfig interface{}) ([]byte, error) {

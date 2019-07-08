@@ -6,11 +6,12 @@ import (
 )
 
 type Package struct {
-	Title     string  `json:"title,omitempty" yaml:"title,omitempty"`
-	Meta      meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
-	Name      string  `json:"-" yaml:"-"`
-	Installed matcher `json:"installed" yaml:"installed"`
-	Versions  matcher `json:"versions,omitempty" yaml:"versions,omitempty"`
+	Title          string  `json:"title,omitempty" yaml:"title,omitempty"`
+	Meta           meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
+	Name           string  `json:"-" yaml:"-"`
+	Installed      matcher `json:"installed" yaml:"installed"`
+	Versions       matcher `json:"versions,omitempty" yaml:"versions,omitempty"`
+	PackageManager string  `json:"package-manager,omitempty" yaml:"package-manager,omitempty"`
 }
 
 func (p *Package) ID() string      { return p.Name }
@@ -21,7 +22,7 @@ func (p *Package) GetMeta() meta    { return p.Meta }
 
 func (p *Package) Validate(sys *system.System) []TestResult {
 	skip := false
-	sysPkg := sys.NewPackage(p.Name, sys, util.Config{})
+	sysPkg := sys.NewPackage(p.Name, p.PackageManager)
 
 	var results []TestResult
 	results = append(results, ValidateValue(p, "installed", p.Installed, sysPkg.Installed, skip))

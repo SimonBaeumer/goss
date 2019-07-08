@@ -12,77 +12,68 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 	"github.com/fatih/color"
 	"github.com/patrickmn/go-cache"
-	"github.com/urfave/cli"
 )
 
-func Serve(c *cli.Context) {
-	endpoint := c.String("endpoint")
-	color.NoColor = true
-	cache := cache.New(c.Duration("cache"), 30*time.Second)
+//TODO: Maybe separating handler and server?
+// HealthHandler creates a new handler for the health endpoint
+type HealthHandler struct {
+	RunTimeConfig GossRunTime
+	GossConfig    GossConfig
+	Sys           *system.System
+	Outputer      outputs.Outputer
+	Cache         *cache.Cache
+	GossMu        *sync.Mutex
+	ContentType   string
+	MaxConcurrent int
+	ListenAddr    string
+	FormatOptions []string
+}
 
-	health := healthHandler{
-		c:             c,
-		gossConfig:    getGossConfig(c),
-		sys:           system.New(c),
-		outputer:      getOutputer(c),
-		cache:         cache,
-		gossMu:        &sync.Mutex{},
-		maxConcurrent: c.Int("max-concurrent"),
-	}
-	if c.String("format") == "json" {
-		health.contentType = "application/json"
-	}
-	http.Handle(endpoint, health)
-	listenAddr := c.String("listen-addr")
-	log.Printf("Starting to listen on: %s", listenAddr)
-	log.Fatal(http.ListenAndServe(c.String("listen-addr"), nil))
+// Serve creates a new endpoint and starts the http server
+func (h *HealthHandler) Serve(endpoint string) {
+	color.NoColor = true
+
+	http.Handle(endpoint, h)
+	log.Printf("Starting to listen on: %s", h.ListenAddr)
+	log.Fatal(http.ListenAndServe(h.ListenAddr, nil))
 }
 
 type res struct {
 	exitCode int
 	b        bytes.Buffer
 }
-type healthHandler struct {
-	c             *cli.Context
-	gossConfig    GossConfig
-	sys           *system.System
-	outputer      outputs.Outputer
-	cache         *cache.Cache
-	gossMu        *sync.Mutex
-	contentType   string
-	maxConcurrent int
-}
 
-func (h healthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
+//ServeHTTP fulfills the handler interface and is called as a handler on the
+//health check request.
+func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	outputConfig := util.OutputConfig{
-		FormatOptions: h.c.StringSlice("format-options"),
+		FormatOptions: h.FormatOptions,
 	}
 
 	log.Printf("%v: requesting health probe", r.RemoteAddr)
 	var resp res
-	tmp, found := h.cache.Get("res")
+	tmp, found := h.Cache.Get("res")
 	if found {
 		resp = tmp.(res)
 	} else {
-		h.gossMu.Lock()
-		defer h.gossMu.Unlock()
-		tmp, found := h.cache.Get("res")
+		h.GossMu.Lock()
+		defer h.GossMu.Unlock()
+		tmp, found := h.Cache.Get("res")
 		if found {
 			resp = tmp.(res)
 		} else {
-			h.sys = system.New(h.c)
-			log.Printf("%v: Stale cache, running tests", r.RemoteAddr)
+			h.Sys = system.New()
+			log.Printf("%v: Stale Cache, running tests", r.RemoteAddr)
 			iStartTime := time.Now()
-			out := validate(h.sys, h.gossConfig, h.maxConcurrent)
+			out := validate(h.Sys, h.GossConfig, h.MaxConcurrent)
 			var b bytes.Buffer
-			exitCode := h.outputer.Output(&b, out, iStartTime, outputConfig)
+			exitCode := h.Outputer.Output(&b, out, iStartTime, outputConfig)
 			resp = res{exitCode: exitCode, b: b}
-			h.cache.Set("res", resp, cache.DefaultExpiration)
+			h.Cache.Set("res", resp, cache.DefaultExpiration)
 		}
 	}
-	if h.contentType != "" {
-		w.Header().Set("Content-Type", h.contentType)
+	if h.ContentType != "" {
+		w.Header().Set("Content-Type", h.ContentType)
 	}
 	if resp.exitCode == 0 {
 		resp.b.WriteTo(w)

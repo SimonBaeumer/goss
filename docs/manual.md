@@ -702,11 +702,10 @@ package:
     # required attributes
     installed: true
     # optional attributes
+    package: pacman #set a specific package manager
     versions:
     - 2.2.15
 ```
-
-**NOTE:** this check uses the `--package <format>` parameter passed on the command line.
 
 
 ### port

@@ -7,6 +7,7 @@ import (
 	"syscall"
 )
 
+// Command represents a command which can be executed
 type Command struct {
 	name           string
 	Cmd            *exec.Cmd
@@ -15,6 +16,7 @@ type Command struct {
 	Status         int
 }
 
+// NewCommand creates a command
 func NewCommand(name string, arg ...string) *Command {
 	//fmt.Println(arg)
 	command := new(Command)
@@ -23,6 +25,7 @@ func NewCommand(name string, arg ...string) *Command {
 	return command
 }
 
+// Run executes the command and writes the results to its properties
 func (c *Command) Run() error {
 	c.Cmd.Stdout = &c.Stdout
 	c.Cmd.Stderr = &c.Stderr

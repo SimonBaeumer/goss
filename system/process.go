@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/aelsabbahy/go-ps"
 	"github.com/SimonBaeumer/goss/util"
+	"github.com/aelsabbahy/go-ps"
 )
 
 type Process interface {

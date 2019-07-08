@@ -9,8 +9,16 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
-type Rspecish struct{}
+// Rspecish represents the rspecish output type
+type Rspecish struct {
+	//FakeDuration will only be needed for testing purposes
+	FakeDuration time.Duration
+}
 
+// Name returns the name
+func (r Rspecish) Name() string { return "rspecish" }
+
+// Output writes the actual output
 func (r Rspecish) Output(w io.Writer, results <-chan []resource.TestResult,
 	startTime time.Time, outConfig util.OutputConfig) (exitCode int) {
 
@@ -42,7 +50,11 @@ func (r Rspecish) Output(w io.Writer, results <-chan []resource.TestResult,
 	fmt.Fprint(w, "\n\n")
 	fmt.Fprint(w, failedOrSkippedSummary(failedOrSkipped))
 
-	fmt.Fprint(w, summary(startTime, testCount, failed, skipped))
+	duration := time.Since(startTime)
+	if r.FakeDuration != 0 {
+		duration = r.FakeDuration
+	}
+	fmt.Fprint(w, summary(duration.Seconds(), testCount, failed, skipped))
 	if failed > 0 {
 		return 1
 	}

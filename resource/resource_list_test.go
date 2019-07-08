@@ -9,7 +9,6 @@ import (
 
 const SuccessStatusCode = 200
 
-
 func TestAddrMap_AppendSysResource(t *testing.T) {
 	conf := util.Config{}
 	systemMock := &system.System{
