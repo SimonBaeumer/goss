@@ -1,6 +1,7 @@
 # Goss - Quick and Easy server validation
 
 [![Build Status](https://travis-ci.org/SimonBaeumer/goss.svg?branch=master)](https://travis-ci.org/SimonBaeumer/goss)
+[![Go Report Card](https://goreportcard.com/badge/github.com/SimonBaeumer/goss)](https://goreportcard.com/report/github.com/SimonBaeumer/goss)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/4024768d424e4731012e/test_coverage)](https://codeclimate.com/github/SimonBaeumer/goss/test_coverage)
 
 ## Goss in 45 seconds
