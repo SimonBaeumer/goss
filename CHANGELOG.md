@@ -2,6 +2,7 @@
 
  - Fixed a bug where DNS record lookups never were fired wihout a nameserver
  - Removed global `--package` option, added `package-manager` property to `package` resource
+ - Removed code dependency on `*cli.Context`
 
 # v0.5.0
 
