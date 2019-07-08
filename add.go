@@ -2,36 +2,42 @@ package goss
 
 import (
 	"fmt"
-	"github.com/SimonBaeumer/goss/internal/app"
-    "github.com/SimonBaeumer/goss/resource"
-    "github.com/SimonBaeumer/goss/system"
+	"github.com/SimonBaeumer/goss/resource"
+	"github.com/SimonBaeumer/goss/system"
 	"github.com/SimonBaeumer/goss/util"
 	"io"
 	"os"
-    "reflect"
-    "strconv"
+	"reflect"
+	"strconv"
 	"strings"
 )
 
 type Add struct {
-	Writer io.Writer
-	Ctx    app.CliContext
-	Sys    *system.System
+	Writer            io.Writer
+	ExcludeAttr       []string
+	Timeout           int
+	AllowInsecure     bool
+	NoFollowRedirects bool
+	Server            string
+	Username          string
+	Password          string
+	Header            string
+	Sys               *system.System
 }
 
 // AddResources is a sSimple wrapper to add multiple resources
 func (a *Add) AddResources(fileName, resourceName string, keys []string) error {
 	OutStoreFormat = getStoreFormatFromFileName(fileName)
-	header := extractHeaderArgument(a.Ctx.Header)
+	header := extractHeaderArgument(a.Header)
 
 	config := util.Config{
-		IgnoreList:        a.Ctx.ExcludeAttr,
-		Timeout:           a.Ctx.Timeout,
-		AllowInsecure:     a.Ctx.AllowInsecure,
-		NoFollowRedirects: a.Ctx.NoFollowRedirects,
-		Server:            a.Ctx.Server,
-		Username:          a.Ctx.Username,
-		Password:          a.Ctx.Password,
+		IgnoreList:        a.ExcludeAttr,
+		Timeout:           a.Timeout,
+		AllowInsecure:     a.AllowInsecure,
+		NoFollowRedirects: a.NoFollowRedirects,
+		Server:            a.Server,
+		Username:          a.Username,
+		Password:          a.Password,
 		Header:            header,
 	}
 

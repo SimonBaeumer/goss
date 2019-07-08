@@ -5,7 +5,7 @@ Fail and Success case for every resource.
 
  - [x] addr 
  - [x] command
- - [ ] dns
+ - [x] dns
  - [x] file
  - [x] gossfile
  - [x] group

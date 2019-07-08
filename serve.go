@@ -2,7 +2,6 @@ package goss
 
 import (
 	"bytes"
-	"github.com/SimonBaeumer/goss/internal/app"
 	"log"
 	"net/http"
 	"sync"
@@ -15,10 +14,9 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
-//TODO: Maybe seperating handler and server?
+//TODO: Maybe separating handler and server?
 type HealthHandler struct {
 	RunTimeConfig GossRunTime
-	C             app.CliContext
 	GossConfig    GossConfig
 	Sys           *system.System
 	Outputer      outputs.Outputer
@@ -27,6 +25,7 @@ type HealthHandler struct {
 	ContentType   string
 	MaxConcurrent int
 	ListenAddr    string
+	FormatOptions []string
 }
 
 func (h *HealthHandler) Serve(endpoint string) {
@@ -46,7 +45,7 @@ type res struct {
 //health check request.
 func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	outputConfig := util.OutputConfig{
-		FormatOptions: h.C.FormatOptions,
+		FormatOptions: h.FormatOptions,
 	}
 
 	log.Printf("%v: requesting health probe", r.RemoteAddr)

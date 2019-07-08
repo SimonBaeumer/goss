@@ -2,7 +2,6 @@ package main
 
 import (
     "fmt"
-    app2 "github.com/SimonBaeumer/goss/internal/app"
     "github.com/SimonBaeumer/goss/system"
     "github.com/fatih/color"
     "github.com/patrickmn/go-cache"
@@ -14,7 +13,6 @@ import (
     "github.com/SimonBaeumer/goss"
     "github.com/SimonBaeumer/goss/outputs"
     "github.com/urfave/cli"
-    //"time"
 )
 
 var version string
@@ -28,6 +26,58 @@ func main() {
     }
 }
 
+// CliConfig represents all configurations passed by the cli app
+type CliConfig struct {
+    FormatOptions []string
+    Sleep time.Duration
+    RetryTimeout time.Duration
+    MaxConcurrent int
+    Vars string
+    Gossfile string
+    ExcludeAttr []string
+    Timeout int
+    AllowInsecure bool
+    NoFollowRedirects bool
+    Server string
+    Username string
+    Password string
+    Header string
+    Endpoint string
+    ListenAddr string
+    Cache time.Duration
+    Format string
+    NoColor bool
+    Color bool
+}
+
+// NewCliConfig creates an object from the cli.Context. It is used as a constructor and will do simple type conversions
+// and validations
+func NewCliConfig(c *cli.Context) CliConfig {
+    return CliConfig{
+        FormatOptions: c.StringSlice("format-options"),
+        Sleep: c.Duration("sleep"),
+        RetryTimeout: c.Duration("retry-timeout"),
+        MaxConcurrent: c.Int("max-concurrent"),
+        Vars: c.GlobalString("vars"),
+        Gossfile: c.GlobalString("gossfile"),
+        ExcludeAttr: c.GlobalStringSlice("exclude-attr"),
+        Timeout: int(c.Duration("timeout") / time.Millisecond),
+        AllowInsecure: c.Bool("insecure"),
+        NoFollowRedirects: c.Bool("no-follow-redirects"),
+        Server: c.String("server"),
+        Username: c.String("username"),
+        Password: c.String("password"),
+        Header: c.String("header"),
+        Endpoint: c.String("endpoint"),
+        ListenAddr: c.String("listen-addr"),
+        Cache: c.Duration("cache"),
+        Format: c.String("format"),
+        NoColor: c.Bool("no-color"),
+        Color: c.Bool("color"),
+    }
+}
+
+// Create the cli.App object
 func createApp() *cli.App {
     app := cli.NewApp()
     app.EnableBashCompletion = true
@@ -71,10 +121,19 @@ func createApp() *cli.App {
             Aliases: []string{"aa"},
             Usage:   "automatically add all matching resource to the test suite",
             Action: func(c *cli.Context) error {
+                conf := NewCliConfig(c)
+
                 a := goss.Add{
-                    Ctx: app2.NewCliContext(c),
                     Writer: app.Writer,
                     Sys: system.New(),
+                    Username: conf.Username,
+                    Password: conf.Password,
+                    Server: conf.Server,
+                    Timeout: conf.Timeout,
+                    NoFollowRedirects: conf.NoFollowRedirects,
+                    AllowInsecure: conf.AllowInsecure,
+                    ExcludeAttr: conf.ExcludeAttr,
+                    Header: conf.Header,
                 }
                 return a.AutoAddResources(c.GlobalString("gossfile"), c.Args())
             },
@@ -126,24 +185,28 @@ func createServeCommand() cli.Command {
             },
         },
         Action: func(c *cli.Context) error {
-            ctx := app2.NewCliContext(c)
+            conf := NewCliConfig(c)
 
-            gossRunTime := getGossRunTime(ctx)
-
-            h := &goss.HealthHandler{
-                Cache:         cache.New(ctx.Cache, 30*time.Second),
-                Outputer:      outputs.GetOutputer(ctx.Format),
-                Sys:           system.New(),
-                GossMu:        &sync.Mutex{},
-                MaxConcurrent: ctx.MaxConcurrent,
-                GossConfig:    gossRunTime.GetGossConfig(),
+            gossRunTime := goss.GossRunTime{
+                Gossfile: c.GlobalString("gossfile"),
+                Vars: c.GlobalString("vars"),
             }
 
-            if ctx.Format == "json" {
+            h := &goss.HealthHandler{
+                Cache:         cache.New(conf.Cache, 30 * time.Second),
+                Outputer:      outputs.GetOutputer(conf.Format),
+                Sys:           system.New(),
+                GossMu:        &sync.Mutex{},
+                MaxConcurrent: conf.MaxConcurrent,
+                GossConfig:    gossRunTime.GetGossConfig(),
+                FormatOptions: conf.FormatOptions,
+            }
+
+            if conf.Format == "json" {
                 h.ContentType = "application/json"
             }
 
-            h.Serve(ctx.Endpoint)
+            h.Serve(conf.Endpoint)
             return nil
         },
     }
@@ -151,12 +214,21 @@ func createServeCommand() cli.Command {
 
 func createAddHandler(app *cli.App, resourceName string) (func(c *cli.Context) error) {
     return func(c *cli.Context) error {
+        conf := NewCliConfig(c)
+
         a := goss.Add{
             Sys: system.New(),
             Writer: app.Writer,
+            Username: conf.Username,
+            Password: conf.Password,
+            Server: conf.Server,
+            Timeout: conf.Timeout,
+            NoFollowRedirects: conf.NoFollowRedirects,
+            AllowInsecure: conf.AllowInsecure,
+            ExcludeAttr: conf.ExcludeAttr,
+            Header: conf.Header,
         }
 
-        a.Ctx = app2.NewCliContext(c)
         a.AddResources(c.GlobalString("gossfile"), resourceName, c.Args())
         return nil
     }
@@ -348,27 +420,27 @@ func createValidateCommand(app *cli.App) cli.Command {
             },
         },
         Action: func(c *cli.Context) error {
-            ctx := app2.NewCliContext(c)
+            conf := NewCliConfig(c)
 
-            runtime := getGossRunTime(ctx)
+            runtime := getGossRunTime(conf.Gossfile, conf.Vars)
 
             v := &goss.Validator{
                 OutputWriter:  app.Writer,
-                MaxConcurrent: ctx.MaxConcurrent,
-                Outputer:      outputs.GetOutputer(ctx.Format),
-                FormatOptions: ctx.FormatOptions,
+                MaxConcurrent: conf.MaxConcurrent,
+                Outputer:      outputs.GetOutputer(conf.Format),
+                FormatOptions: conf.FormatOptions,
                 GossConfig:    runtime.GetGossConfig(),
             }
 
             //TODO: ugly shit to set the color here, tmp fix for the moment!
-            if ctx.NoColor {
+            if conf.NoColor {
                 color.NoColor = true
             }
-            if ctx.Color {
+            if conf.Color {
                 color.NoColor = false
             }
 
-            if ctx.Gossfile == "testing" {
+            if conf.Gossfile == "testing" {
                 v.Validate(startTime)
                 return nil
             }
@@ -379,10 +451,10 @@ func createValidateCommand(app *cli.App) cli.Command {
     }
 }
 
-func getGossRunTime(ctx app2.CliContext) goss.GossRunTime {
+func getGossRunTime(gossfile string, vars string) goss.GossRunTime {
     runtime := goss.GossRunTime{
-        Gossfile: ctx.Gossfile,
-        Vars:     ctx.Vars,
+        Gossfile: gossfile,
+        Vars:     vars,
     }
     return runtime
 }

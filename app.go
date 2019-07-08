@@ -2,7 +2,6 @@ package goss
 
 import (
     "fmt"
-    "github.com/SimonBaeumer/goss/internal/app"
     "io/ioutil"
     "os"
     "path/filepath"
@@ -16,10 +15,6 @@ type GossRunTime struct {
     Vars       string
     //Package defines which package manager you want to use, i.e. yum, apt, ...
     Package    string //this does not belong here imho
-}
-
-func NewGossRunTime(ctx app.CliContext) *GossRunTime {
-    return &GossRunTime{}
 }
 
 func (g *GossRunTime) Serve() {
