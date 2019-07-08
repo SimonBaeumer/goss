@@ -34,13 +34,13 @@ func (g *GossRunTime) Validate(v *Validator) int {
 func (g *GossRunTime) Render() (string, error) {
     goss, err := os.Open(g.Gossfile)
     if err != nil {
-        return "", err
+        return "", fmt.Errorf("Could not open gossfile with error: %s", err.Error())
     }
     defer goss.Close()
 
     vars, err := os.Open(g.Vars)
     if err != nil {
-        return "", err
+        return "", fmt.Errorf("Could not open varsfile with error: %s", err.Error())
     }
     defer vars.Close()
 
