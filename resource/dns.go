@@ -20,14 +20,16 @@ type DNS struct {
 }
 
 // ID returns the Host as the Identifier
-func (d *DNS) ID() string      { return d.Host }
+func (d *DNS) ID() string { return d.Host }
+
 // SetID sets the ID as Host
 func (d *DNS) SetID(id string) { d.Host = id }
 
 // GetTitle returns the title
 func (d *DNS) GetTitle() string { return d.Title }
+
 /// GetMeta returns the meta of
-func (d *DNS) GetMeta() meta    { return d.Meta }
+func (d *DNS) GetMeta() meta { return d.Meta }
 
 // Validate validates the given resource
 func (d *DNS) Validate(sys *system.System) []TestResult {

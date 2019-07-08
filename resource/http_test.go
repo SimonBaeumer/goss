@@ -137,7 +137,7 @@ func Test_isNotInSlice(t *testing.T) {
 }
 
 func Test_ParseYAML(t *testing.T) {
-	configString :=  []byte(`
+	configString := []byte(`
 status: 200
 allow-insecure: true
 no-follow-redirects: true

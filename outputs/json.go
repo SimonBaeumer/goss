@@ -12,7 +12,7 @@ import (
 )
 
 // Json represents the json output type
-type Json struct{
+type Json struct {
 	// FakeDuration will only be used for testing purposes
 	FakeDuration time.Duration
 }

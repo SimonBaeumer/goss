@@ -44,7 +44,7 @@ func NewDefHTTP(http string, system *System, config util.Config) HTTP {
 		allowInsecure:     config.AllowInsecure,
 		noFollowRedirects: config.NoFollowRedirects,
 		Timeout:           config.Timeout,
-		Username:		   config.Username,
+		Username:          config.Username,
 		Password:          config.Password,
 		RequestHeaders:    config.RequestHeaders,
 		ClientCertificate: config.Certificate,
@@ -58,12 +58,11 @@ func (u *DefHTTP) setup() error {
 	}
 	u.loaded = true
 
-
-    tr := &http.Transport{
-		TLSClientConfig:   &tls.Config{
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: u.allowInsecure,
-            Certificates: []tls.Certificate{u.ClientCertificate},
-	    },
+			Certificates:       []tls.Certificate{u.ClientCertificate},
+		},
 		DisableKeepAlives: true,
 	}
 	client := &http.Client{

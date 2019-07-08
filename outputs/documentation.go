@@ -10,7 +10,7 @@ import (
 )
 
 // Documentation represents the documentation output type
-type Documentation struct{
+type Documentation struct {
 	//FakeDuration will only be used for testing purposes
 	FakeDuration time.Duration
 }

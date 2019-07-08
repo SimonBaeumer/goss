@@ -24,7 +24,6 @@ type Config struct {
 }
 
 type Request struct {
-
 }
 
 type OutputConfig struct {

@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"sync"
 
-	"github.com/aelsabbahy/GOnetstat"
 	util2 "github.com/SimonBaeumer/goss/util"
+	"github.com/aelsabbahy/GOnetstat"
 	// This needs a better name
 	"github.com/aelsabbahy/go-ps"
 )

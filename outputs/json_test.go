@@ -1,38 +1,38 @@
 package outputs
 
 import (
-    "bytes"
-    "github.com/SimonBaeumer/goss/resource"
-    "github.com/SimonBaeumer/goss/util"
-    "github.com/stretchr/testify/assert"
-    "sync"
-    "testing"
-    "time"
+	"bytes"
+	"github.com/SimonBaeumer/goss/resource"
+	"github.com/SimonBaeumer/goss/util"
+	"github.com/stretchr/testify/assert"
+	"sync"
+	"testing"
+	"time"
 )
 
 func TestJson_Name(t *testing.T) {
-    j := Json{}
-    assert.Equal(t, "json", j.Name())
+	j := Json{}
+	assert.Equal(t, "json", j.Name())
 }
 
 func TestJson_Output(t *testing.T) {
-    var wg sync.WaitGroup
-    b := &bytes.Buffer{}
-    j := Json{FakeDuration: 1000}
-    out := make(chan []resource.TestResult)
-    r := 1
+	var wg sync.WaitGroup
+	b := &bytes.Buffer{}
+	j := Json{FakeDuration: 1000}
+	out := make(chan []resource.TestResult)
+	r := 1
 
-    go func() {
-        defer wg.Done()
-        wg.Add(1)
-        r = j.Output(b, out, time.Now(), util.OutputConfig{})
-    }()
+	go func() {
+		defer wg.Done()
+		wg.Add(1)
+		r = j.Output(b, out, time.Now(), util.OutputConfig{})
+	}()
 
-    out <- GetExampleTestResult()
+	out <- GetExampleTestResult()
 
-    close(out)
-    wg.Wait()
-    expectedJson := `{
+	close(out)
+	wg.Wait()
+	expectedJson := `{
     "results": [
         {
             "duration": 500,
@@ -61,6 +61,6 @@ func TestJson_Output(t *testing.T) {
     }
 }
 `
-    assert.Equal(t, expectedJson, b.String())
-    assert.Equal(t, 0, r)
+	assert.Equal(t, expectedJson, b.String())
+	assert.Equal(t, 0, r)
 }

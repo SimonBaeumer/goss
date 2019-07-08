@@ -2,8 +2,8 @@ package goss
 
 import (
 	"fmt"
-    "io"
-    "os"
+	"io"
+	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -21,15 +21,15 @@ type Validator struct {
 	Sleep         time.Duration
 	FormatOptions []string
 	Outputer      outputs.Outputer
-	MaxConcurrent int    //Separating concurrency and validation, irritating atm...
+	MaxConcurrent int //Separating concurrency and validation, irritating atm...
 	OutputWriter  io.Writer
 }
 
 // Validate validation runtime
 func (v *Validator) Validate(startTime time.Time) int {
-    if v.OutputWriter == nil {
-        v.OutputWriter = os.Stdout
-    }
+	if v.OutputWriter == nil {
+		v.OutputWriter = os.Stdout
+	}
 
 	outputConfig := util.OutputConfig{
 		FormatOptions: v.FormatOptions,
@@ -48,7 +48,7 @@ func (v *Validator) Validate(startTime time.Time) int {
 		}
 
 		elapsed := time.Since(startTime)
-		if elapsed + v.Sleep > v.RetryTimeout {
+		if elapsed+v.Sleep > v.RetryTimeout {
 			color.Red("\nERROR: Timeout of %s reached before tests entered a passing state", v.RetryTimeout)
 			return exitCode
 		}
@@ -63,7 +63,7 @@ func (v *Validator) Validate(startTime time.Time) int {
 }
 
 func validate(sys *system.System, gossConfig GossConfig, maxConcurrent int) <-chan []resource.TestResult {
-    out := make(chan []resource.TestResult)
+	out := make(chan []resource.TestResult)
 	in := make(chan resource.Resource)
 
 	// Send resources to input channel

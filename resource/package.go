@@ -6,12 +6,12 @@ import (
 )
 
 type Package struct {
-	Title            string  `json:"title,omitempty" yaml:"title,omitempty"`
-	Meta             meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
-	Name             string  `json:"-" yaml:"-"`
-	Installed        matcher `json:"installed" yaml:"installed"`
-	Versions         matcher `json:"versions,omitempty" yaml:"versions,omitempty"`
-	PackageManager   string  `json:"package-manager,omitempty" yaml:"package-manager,omitempty"`
+	Title          string  `json:"title,omitempty" yaml:"title,omitempty"`
+	Meta           meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
+	Name           string  `json:"-" yaml:"-"`
+	Installed      matcher `json:"installed" yaml:"installed"`
+	Versions       matcher `json:"versions,omitempty" yaml:"versions,omitempty"`
+	PackageManager string  `json:"package-manager,omitempty" yaml:"package-manager,omitempty"`
 }
 
 func (p *Package) ID() string      { return p.Name }

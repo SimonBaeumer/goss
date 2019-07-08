@@ -1,11 +1,11 @@
 package resource
 
 import (
-	"testing"
-	"github.com/SimonBaeumer/goss/util"
 	"github.com/SimonBaeumer/goss/system/mock_system"
+	"github.com/SimonBaeumer/goss/util"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestAddr_NewAddr(t *testing.T) {

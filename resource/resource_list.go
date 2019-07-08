@@ -18,6 +18,7 @@ import (
 //go:generate goimports -w resource_list.go resource_list.go
 
 type AddrMap map[string]*Addr
+
 var BlacklistedAutoAddHeaders = [...]string{"Set-Cookie", "set-cookie", "Date", "date"}
 
 func (r AddrMap) AppendSysResource(sr string, sys *system.System, config util.Config) (*Addr, error) {

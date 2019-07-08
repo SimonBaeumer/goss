@@ -1,50 +1,50 @@
 package goss
 
 import (
-    "github.com/stretchr/testify/assert"
-    "io/ioutil"
-    "os"
-    "testing"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"os"
+	"testing"
 )
 
 const GossTestingEnvOS = "GOSS_TESTING_OS"
 
 func Test_RenderJSON(t *testing.T) {
-    err := os.Setenv(GossTestingEnvOS, "centos")
-    if err != nil {
-        panic(err.Error())
-    }
-    defer os.Unsetenv(GossTestingEnvOS)
+	err := os.Setenv(GossTestingEnvOS, "centos")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer os.Unsetenv(GossTestingEnvOS)
 
-    tmpVars, err := ioutil.TempFile("", "example_tmp_vars_*.yaml")
-    if err != nil {
-        panic(err.Error())
-    }
-    defer os.Remove(tmpVars.Name())
+	tmpVars, err := ioutil.TempFile("", "example_tmp_vars_*.yaml")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer os.Remove(tmpVars.Name())
 
-    _, err = tmpVars.WriteString(getExampleVars())
-    if err != nil {
-        panic(err.Error())
-    }
+	_, err = tmpVars.WriteString(getExampleVars())
+	if err != nil {
+		panic(err.Error())
+	}
 
-    tmpGossfile, err := ioutil.TempFile("", "example_tmp_gossfile_*.yaml")
-    if err != nil {
-        panic(err.Error())
-    }
-    defer os.Remove(tmpGossfile.Name())
+	tmpGossfile, err := ioutil.TempFile("", "example_tmp_gossfile_*.yaml")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer os.Remove(tmpGossfile.Name())
 
-    _, err = tmpGossfile.WriteString(getExampleTemplate())
-    if err != nil {
-        panic(err.Error())
-    }
+	_, err = tmpGossfile.WriteString(getExampleTemplate())
+	if err != nil {
+		panic(err.Error())
+	}
 
-    result := RenderJSON(tmpGossfile, tmpVars)
+	result := RenderJSON(tmpGossfile, tmpVars)
 
-    assert.Equal(t, getExpecetd(), result)
+	assert.Equal(t, getExpecetd(), result)
 }
 
 func getExampleVars() string {
-    return `
+	return `
     centos:
       packages:
         kernel:
@@ -62,7 +62,7 @@ func getExampleVars() string {
 }
 
 func getExampleTemplate() string {
-    return `
+	return `
     package:
     # Looping over a variables defined in a vars.yaml using $OS environment variable as a lookup key
     {{range $name, $vers := index .Vars .Env.GOSS_TESTING_OS "packages"}}
@@ -102,7 +102,7 @@ func getExampleTemplate() string {
 }
 
 func getExpecetd() string {
-    expected := `package:
+	expected := `package:
   libselinux:
     installed: true
 user:
@@ -119,5 +119,5 @@ user:
     home: /home/user2
     shell: /bin/bash
 `
-    return expected
+	return expected
 }

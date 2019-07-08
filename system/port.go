@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aelsabbahy/GOnetstat"
 	"github.com/SimonBaeumer/goss/util"
+	"github.com/aelsabbahy/GOnetstat"
 )
 
 type Port interface {

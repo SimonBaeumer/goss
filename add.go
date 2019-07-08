@@ -85,21 +85,21 @@ func (a *Add) AddResource(fileName string, gossConfig GossConfig, resourceName, 
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "dns":
 		res, err := gossConfig.DNS.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "file":
 		res, err := gossConfig.Files.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "Group":
 		res, err := gossConfig.Groups.AppendSysResource(key, a.Sys, config)
 		if err != nil {
@@ -113,56 +113,56 @@ func (a *Add) AddResource(fileName string, gossConfig GossConfig, resourceName, 
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "port":
 		res, err := gossConfig.Ports.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "process":
 		res, err := gossConfig.Processes.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "service":
 		res, err := gossConfig.Services.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "user":
 		res, err := gossConfig.Users.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "gossfile":
 		res, err := gossConfig.Gossfiles.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "kernel-param":
 		res, err := gossConfig.KernelParams.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "Mount":
 		res, err := gossConfig.Mounts.AppendSysResource(key, a.Sys, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	case "interface":
 		res, err := gossConfig.Interfaces.AppendSysResource(key, a.Sys, config)
 		if err != nil {
@@ -176,7 +176,7 @@ func (a *Add) AddResource(fileName string, gossConfig GossConfig, resourceName, 
 			fmt.Println(err)
 			os.Exit(1)
 		}
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	default:
 		panic("Undefined resource name: " + resourceName)
 	}
@@ -212,28 +212,28 @@ func (a *Add) AutoAddResource(fileName string, gossConfig GossConfig, key string
 	// file
 	if strings.Contains(key, "/") {
 		if res, _, ok := gossConfig.Files.AppendSysResourceIfExists(key, a.Sys); ok == true {
-            a.resourcePrint(fileName, res)
+			a.resourcePrint(fileName, res)
 		}
 	}
 
 	// group
 	if res, _, ok := gossConfig.Groups.AppendSysResourceIfExists(key, a.Sys); ok == true {
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	}
 
 	// package
 	if res, _, ok := gossConfig.Packages.AppendSysResourceIfExists(key, a.Sys); ok == true {
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	}
 
 	// port
 	if res, _, ok := gossConfig.Ports.AppendSysResourceIfExists(key, a.Sys); ok == true {
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	}
 
 	// process
 	if res, sysres, ok := gossConfig.Processes.AppendSysResourceIfExists(key, a.Sys); ok == true {
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 		ports := system.GetPorts(true)
 		pids, _ := sysres.Pids()
 		for _, pid := range pids {
@@ -243,7 +243,7 @@ func (a *Add) AutoAddResource(fileName string, gossConfig GossConfig, key string
 					if entry.Pid == pidS {
 						// port
 						if res, _, ok := gossConfig.Ports.AppendSysResourceIfExists(port, a.Sys); ok == true {
-                            a.resourcePrint(fileName, res)
+							a.resourcePrint(fileName, res)
 						}
 					}
 				}
@@ -253,23 +253,23 @@ func (a *Add) AutoAddResource(fileName string, gossConfig GossConfig, key string
 
 	// Service
 	if res, _, ok := gossConfig.Services.AppendSysResourceIfExists(key, a.Sys); ok == true {
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	}
 
 	// user
 	if res, _, ok := gossConfig.Users.AppendSysResourceIfExists(key, a.Sys); ok == true {
-        a.resourcePrint(fileName, res)
+		a.resourcePrint(fileName, res)
 	}
 
 	return nil
 }
 
 func (a *Add) resourcePrint(fileName string, res resource.ResourceRead) {
-    resMap := map[string]resource.ResourceRead{res.ID(): res}
+	resMap := map[string]resource.ResourceRead{res.ID(): res}
 
-    oj, _ := marshal(resMap)
-    typ := reflect.TypeOf(res)
-    typs := strings.Split(typ.String(), ".")[1]
+	oj, _ := marshal(resMap)
+	typ := reflect.TypeOf(res)
+	typs := strings.Split(typ.String(), ".")[1]
 
 	fmt.Fprintf(a.Writer, "Adding %s to '%s':\n\n%s\n\n", typs, fileName, string(oj))
 }
