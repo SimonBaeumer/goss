@@ -11,10 +11,12 @@ import (
 	"text/template"
 )
 
+// mkSlice is able to create loops in templates
 func mkSlice(args ...interface{}) []interface{} {
 	return args
 }
 
+// readFile reads a file from inside a template
 func readFile(f string) (string, error) {
 	b, err := ioutil.ReadFile(f)
 	if err != nil {
@@ -49,6 +51,7 @@ var funcMap = map[string]interface{}{
 	"regexMatch": regexMatch,
 }
 
+// NewTemplateFilter creates a new filter with template extensions
 func NewTemplateFilter(varsFile string) func([]byte) []byte {
 	vars, err := varsFromFile(varsFile)
 	if err != nil {

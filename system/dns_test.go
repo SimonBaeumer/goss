@@ -22,7 +22,7 @@ func TestNewDefDNS_WithQueryType(t *testing.T) {
 }
 
 func TestAddr(t *testing.T) {
-    dns := NewDefDNS("localhost", &System{}, util.Config{Timeout: 50})
+    dns := NewDefDNS("localhost", &System{}, util.Config{Timeout: 200})
 
     r, err := dns.Resolvable()
     assert.Nil(t, err)

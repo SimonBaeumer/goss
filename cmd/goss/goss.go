@@ -112,7 +112,13 @@ func createApp() *cli.App {
                 },
             },
             Action: func(c *cli.Context) error {
-                fmt.Print(goss.RenderJSON(c))
+                conf := NewCliConfig(c)
+                runtime := goss.GossRunTime{
+                    Vars: conf.Vars,
+                    Gossfile: conf.Gossfile,
+                }
+
+                fmt.Print(runtime.Render())
                 return nil
             },
         },
@@ -206,7 +212,7 @@ func createServeCommand() cli.Command {
                 h.ContentType = "application/json"
             }
 
-            h.Serve(conf.Endpoint)
+            gossRunTime.Serve(conf.Endpoint, h)
             return nil
         },
     }
@@ -445,7 +451,7 @@ func createValidateCommand(app *cli.App) cli.Command {
                 return nil
             }
 
-            os.Exit(v.Validate(startTime))
+            os.Exit(runtime.Validate(v))
             return nil
         },
     }

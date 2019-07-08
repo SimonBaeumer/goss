@@ -5,6 +5,7 @@ import (
     "io/ioutil"
     "os"
     "path/filepath"
+    "time"
 )
 
 // GossRunTime represents the global runtime configs which can be set in goss
@@ -15,12 +16,36 @@ type GossRunTime struct {
     Vars       string
     //Package defines which package manager you want to use, i.e. yum, apt, ...
     Package    string //this does not belong here imho
+    //Debug on true will create a more verbose output
+    Debug      bool
 }
 
-func (g *GossRunTime) Serve() {
-    //Serve()
+// Serve serves a new health endpoint
+func (g *GossRunTime) Serve(endpoint string, handler *HealthHandler) {
+    handler.Serve(endpoint)
 }
 
+// Validate starts the validation process
+func (g *GossRunTime) Validate(v *Validator) int {
+    return v.Validate(time.Now())
+}
+
+// Render renders a template file
+func (g *GossRunTime) Render() (string, error) {
+    goss, err := os.Open(g.Gossfile)
+    if err != nil {
+        return "", err
+    }
+    defer goss.Close()
+
+    vars, err := os.Open(g.Vars)
+    if err != nil {
+        return "", err
+    }
+    defer vars.Close()
+
+    return RenderJSON(goss, vars), nil
+}
 
 // GetGossConfig returns the goss configuration
 func (g *GossRunTime) GetGossConfig() GossConfig {

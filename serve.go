@@ -15,6 +15,7 @@ import (
 )
 
 //TODO: Maybe separating handler and server?
+// HealthHandler creates a new handler for the health endpoint
 type HealthHandler struct {
 	RunTimeConfig GossRunTime
 	GossConfig    GossConfig
@@ -28,6 +29,7 @@ type HealthHandler struct {
 	FormatOptions []string
 }
 
+// Serve creates a new endpoint and starts the http server
 func (h *HealthHandler) Serve(endpoint string) {
 	color.NoColor = true
 
