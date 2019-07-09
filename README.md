@@ -61,6 +61,9 @@ chmod +rx /usr/local/bin/dgoss
 ### Build it yourself
 
 ```bash
+# Enable git-hooks for development environments
+make init
+# Build the source
 make build
 ```
 

@@ -6,7 +6,13 @@ cmd = goss
 TRAVIS_TAG ?= "0.0.0"
 GO_FILES = $(shell find . \( -path ./vendor -o -name '_test.go' \) -prune -o -name '*.go' -print)
 
-.PHONY: all build install test coverage deps release bench test-int lint gen integration
+.PHONY: all build install test coverage deps release bench test-int lint gen integration init git-hooks
+
+init: git-hooks
+
+git-hooks:
+	$(info INFO: Starting build $@)
+	ln -sf ../../.githooks/pre-commit .git/hooks/pre-commit
 
 all: test-all test-all-32
 
