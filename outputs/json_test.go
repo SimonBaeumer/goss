@@ -1,13 +1,8 @@
 package outputs
 
 import (
-	"bytes"
-	"github.com/SimonBaeumer/goss/resource"
-	"github.com/SimonBaeumer/goss/util"
 	"github.com/stretchr/testify/assert"
-	"sync"
 	"testing"
-	"time"
 )
 
 func TestJson_Name(t *testing.T) {
@@ -16,22 +11,11 @@ func TestJson_Name(t *testing.T) {
 }
 
 func TestJson_Output(t *testing.T) {
-	var wg sync.WaitGroup
-	b := &bytes.Buffer{}
-	j := Json{FakeDuration: 1000}
-	out := make(chan []resource.TestResult)
-	r := 1
+	result, exitCode := runOutput(
+		Json{FakeDuration: 1000},
+		GetExampleTestResult(),
+	)
 
-	go func() {
-		defer wg.Done()
-		wg.Add(1)
-		r = j.Output(b, out, time.Now(), util.OutputConfig{})
-	}()
-
-	out <- GetExampleTestResult()
-
-	close(out)
-	wg.Wait()
 	expectedJson := `{
     "results": [
         {
@@ -61,6 +45,6 @@ func TestJson_Output(t *testing.T) {
     }
 }
 `
-	assert.Equal(t, expectedJson, b.String())
-	assert.Equal(t, 0, r)
+	assert.Equal(t, expectedJson, result)
+	assert.Equal(t, 0, exitCode)
 }
