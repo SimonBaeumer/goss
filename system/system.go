@@ -34,6 +34,7 @@ type System struct {
 	NewMount       func(string, *System, util2.Config) Mount
 	NewInterface   func(string, *System, util2.Config) Interface
 	NewHTTP        func(string, *System, util2.Config) HTTP
+	NewKubernetes  func(string, *System, util2.Config) Kubernetes
 	ports          map[string][]GOnetstat.Process
 	portsOnce      sync.Once
 	procMap        map[string][]ps.Process
