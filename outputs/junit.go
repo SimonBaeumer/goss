@@ -14,7 +14,9 @@ import (
 )
 
 // JUnit represents the junit output type
-type JUnit struct{}
+type JUnit struct {
+	testingTimestamp string
+}
 
 // Name returns the name
 func (r JUnit) Name() string { return "junit" }
@@ -28,6 +30,10 @@ func (r JUnit) Output(w io.Writer, results <-chan []resource.TestResult,
 
 	// ISO8601 timeformat
 	timestamp := time.Now().Format(time.RFC3339)
+	// Testing purposes to set the timestamp directly
+	if r.testingTimestamp != "" {
+		timestamp = r.testingTimestamp
+	}
 
 	var summary map[int]string
 	summary = make(map[int]string)
@@ -66,7 +72,7 @@ func (r JUnit) Output(w io.Writer, results <-chan []resource.TestResult,
 	duration := time.Since(startTime)
 	fmt.Fprintln(w, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
 	fmt.Fprintf(w, "<testsuite name=\"goss\" errors=\"0\" tests=\"%d\" "+
-		"failures=\"%d\" skipped=\"%d\" time=\"%.3f\" timestamp=\"%s\">\n",
+		"failures=\"%d\" skipped=\"%d\" time=\"%.3f\" testingTimestamp=\"%s\">\n",
 		testCount, failed, skipped, duration.Seconds(), timestamp)
 
 	for i := 0; i < testCount; i++ {

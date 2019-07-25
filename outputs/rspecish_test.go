@@ -1,11 +1,7 @@
 package outputs
 
 import (
-	"bytes"
-	"github.com/SimonBaeumer/goss/resource"
-	"github.com/SimonBaeumer/goss/util"
 	"github.com/stretchr/testify/assert"
-	"sync"
 	"testing"
 	"time"
 )
@@ -15,29 +11,54 @@ func TestRspecish_Name(t *testing.T) {
 	assert.Equal(t, "rspecish", j.Name())
 }
 
-func TestRspecish_Output(t *testing.T) {
-	var wg sync.WaitGroup
-	b := &bytes.Buffer{}
+func TestRspecish_Output_Success(t *testing.T) {
 	d, _ := time.ParseDuration("2s")
-	j := Rspecish{FakeDuration: d}
-	out := make(chan []resource.TestResult)
-	r := 1
 
-	go func() {
-		defer wg.Done()
-		wg.Add(1)
-		r = j.Output(b, out, time.Now(), util.OutputConfig{})
-	}()
+	result, exitCode := runOutput(Rspecish{FakeDuration: d}, getSuccessTestResult())
 
-	out <- GetExampleTestResult()
-
-	close(out)
-	wg.Wait()
-	expectedJson := `.
+	expected := `.
 
 Total Duration: 2.000s
 Count: 1, Failed: 0, Skipped: 0
 `
-	assert.Equal(t, expectedJson, b.String())
-	assert.Equal(t, 0, r)
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 0, exitCode)
+}
+
+func TestRspecish_Output_Fail(t *testing.T) {
+	d, _ := time.ParseDuration("2s")
+
+	result, exitCode := runOutput(Rspecish{FakeDuration: d}, getFailTestResult())
+
+	expected := `F
+
+Failures/Skipped:
+
+Title: failure
+resource type: my resource id: a property: doesn't match, expect: [expected] found: []
+
+Total Duration: 2.000s
+Count: 1, Failed: 1, Skipped: 0
+`
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 1, exitCode)
+}
+
+func TestRspecish_Output_Skip(t *testing.T) {
+	d, _ := time.ParseDuration("2s")
+
+	result, exitCode := runOutput(Rspecish{FakeDuration: d}, getSkipTestResult())
+
+	expected := `S
+
+Failures/Skipped:
+
+Title: failure
+resource type: my resource id: a property: skipped
+
+Total Duration: 2.000s
+Count: 1, Failed: 0, Skipped: 1
+`
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 0, exitCode)
 }

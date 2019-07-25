@@ -1,13 +1,8 @@
 package outputs
 
 import (
-	"bytes"
-	"github.com/SimonBaeumer/goss/resource"
-	"github.com/SimonBaeumer/goss/util"
 	"github.com/stretchr/testify/assert"
-	"sync"
 	"testing"
-	"time"
 )
 
 func TestJson_Name(t *testing.T) {
@@ -16,22 +11,11 @@ func TestJson_Name(t *testing.T) {
 }
 
 func TestJson_Output(t *testing.T) {
-	var wg sync.WaitGroup
-	b := &bytes.Buffer{}
-	j := Json{FakeDuration: 1000}
-	out := make(chan []resource.TestResult)
-	r := 1
+	result, exitCode := runOutput(
+		Json{FakeDuration: 1000},
+		getSuccessTestResult(),
+	)
 
-	go func() {
-		defer wg.Done()
-		wg.Add(1)
-		r = j.Output(b, out, time.Now(), util.OutputConfig{})
-	}()
-
-	out <- GetExampleTestResult()
-
-	close(out)
-	wg.Wait()
 	expectedJson := `{
     "results": [
         {
@@ -61,6 +45,45 @@ func TestJson_Output(t *testing.T) {
     }
 }
 `
-	assert.Equal(t, expectedJson, b.String())
-	assert.Equal(t, 0, r)
+	assert.Equal(t, expectedJson, result)
+	assert.Equal(t, 0, exitCode)
+}
+
+func TestJson_Output_FAIL(t *testing.T) {
+	result, exitCode := runOutput(
+		Json{FakeDuration: 1000},
+		getFailTestResult(),
+	)
+
+	expected := `{
+    "results": [
+        {
+            "duration": 500,
+            "err": null,
+            "expected": [
+                "expected"
+            ],
+            "found": null,
+            "human": "",
+            "meta": null,
+            "property": "a property",
+            "resource-id": "my resource id",
+            "resource-type": "resource type",
+            "result": 1,
+            "successful": false,
+            "summary-line": "resource type: my resource id: a property: doesn't match, expect: [expected] found: []",
+            "test-type": 0,
+            "title": "failure"
+        }
+    ],
+    "summary": {
+        "failed-count": 1,
+        "summary-line": "Count: 1, Failed: 1, Duration: 0.000s",
+        "test-count": 1,
+        "total-duration": 1000
+    }
+}
+`
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 1, exitCode)
 }

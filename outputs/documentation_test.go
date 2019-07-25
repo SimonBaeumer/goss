@@ -1,45 +1,70 @@
 package outputs
 
 import (
-	"bytes"
-	"github.com/SimonBaeumer/goss/resource"
-	"github.com/SimonBaeumer/goss/util"
 	"github.com/stretchr/testify/assert"
-	"sync"
 	"testing"
 	"time"
 )
 
 func TestDocumentation_Name(t *testing.T) {
-	j := Documentation{}
-	assert.Equal(t, "documentation", j.Name())
+	d := Documentation{}
+	assert.Equal(t, "documentation", d.Name())
 }
 
-func TestDocumentation_Output(t *testing.T) {
-	var wg sync.WaitGroup
-	b := &bytes.Buffer{}
-	d, _ := time.ParseDuration("2s")
-	j := Documentation{FakeDuration: d}
-	out := make(chan []resource.TestResult)
-	r := 1
+func TestDocumentation_Output_Success(t *testing.T) {
+	duration, _ := time.ParseDuration("2s")
+	d := Documentation{FakeDuration: duration}
+	result, exitCode := runOutput(d, getSuccessTestResult())
 
-	go func() {
-		defer wg.Done()
-		wg.Add(1)
-		r = j.Output(b, out, time.Now(), util.OutputConfig{})
-	}()
-
-	out <- GetExampleTestResult()
-
-	close(out)
-	wg.Wait()
-	expectedJson := `Title: my title
+	expected := `Title: my title
 resource type: my resource id: a property: matches expectation: [expected]
 
 
 Total Duration: 2.000s
 Count: 1, Failed: 0, Skipped: 0
 `
-	assert.Equal(t, expectedJson, b.String())
-	assert.Equal(t, 0, r)
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 0, exitCode)
+}
+
+func TestDocumentation_Output_Fail(t *testing.T) {
+	duration, _ := time.ParseDuration("2s")
+	d := Documentation{FakeDuration: duration}
+	result, exitCode := runOutput(d, getFailTestResult())
+
+	expected := `Title: failure
+resource type: my resource id: a property: doesn't match, expect: [expected] found: []
+
+
+Failures/Skipped:
+
+Title: failure
+resource type: my resource id: a property: doesn't match, expect: [expected] found: []
+
+Total Duration: 2.000s
+Count: 1, Failed: 1, Skipped: 0
+`
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 1, exitCode)
+}
+
+func TestDocumentation_Output_Skip(t *testing.T) {
+	duration, _ := time.ParseDuration("2s")
+	d := Documentation{FakeDuration: duration}
+	result, exitCode := runOutput(d, getSkipTestResult())
+
+	expected := `Title: failure
+resource type: my resource id: a property: skipped
+
+
+Failures/Skipped:
+
+Title: failure
+resource type: my resource id: a property: skipped
+
+Total Duration: 2.000s
+Count: 1, Failed: 0, Skipped: 1
+`
+	assert.Equal(t, expected, result)
+	assert.Equal(t, 0, exitCode)
 }
