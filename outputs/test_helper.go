@@ -34,13 +34,39 @@ func runOutput(outputer Outputer, results ...resource.TestResult) (string, int) 
 	return buffer.String(), exitCode
 }
 
-//GetExampleTestResult returns an example test result
-func GetExampleTestResult() resource.TestResult {
+//getSuccessTestResult returns an example test result
+func getSuccessTestResult() resource.TestResult {
 	return resource.TestResult{
 		Title:        "my title",
 		Duration:     time.Duration(500),
 		Successful:   true,
 		Result:       resource.SUCCESS,
+		ResourceType: "resource type",
+		ResourceId:   "my resource id",
+		Property:     "a property",
+		Expected:     []string{"expected"},
+	}
+}
+
+func getFailTestResult() resource.TestResult {
+	return resource.TestResult{
+		Title:        "failure",
+		Duration:     time.Duration(500),
+		Successful:   false,
+		Result:       resource.FAIL,
+		ResourceType: "resource type",
+		ResourceId:   "my resource id",
+		Property:     "a property",
+		Expected:     []string{"expected"},
+	}
+}
+
+func getSkipTestResult() resource.TestResult {
+	return resource.TestResult{
+		Title:        "failure",
+		Duration:     time.Duration(500),
+		Successful:   true,
+		Result:       resource.SKIP,
 		ResourceType: "resource type",
 		ResourceId:   "my resource id",
 		Property:     "a property",

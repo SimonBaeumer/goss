@@ -12,7 +12,9 @@ import (
 )
 
 // JsonOneline represents the JsonOneline output type
-type JsonOneline struct{}
+type JsonOneline struct {
+	duration time.Duration
+}
 
 // Name returns the name
 func (r JsonOneline) Name() string { return "json_oneline" }
@@ -40,6 +42,10 @@ func (r JsonOneline) Output(w io.Writer, results <-chan []resource.TestResult,
 
 	summary := make(map[string]interface{})
 	duration := time.Since(startTime)
+	//testing purposes
+	if r.duration != 0 {
+		duration = r.duration
+	}
 	summary["test-count"] = testCount
 	summary["failed-count"] = failed
 	summary["total-duration"] = duration
