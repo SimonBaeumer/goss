@@ -7,6 +7,7 @@ import (
 	"github.com/SimonBaeumer/goss/util"
 )
 
+// Group represents the group resource
 type Group struct {
 	Title     string  `json:"title,omitempty" yaml:"title,omitempty"`
 	Meta      meta    `json:"meta,omitempty" yaml:"meta,omitempty"`
@@ -21,6 +22,7 @@ func (g *Group) SetID(id string) { g.Groupname = id }
 func (g *Group) GetTitle() string { return g.Title }
 func (g *Group) GetMeta() meta    { return g.Meta }
 
+// Validate validates the group resource
 func (g *Group) Validate(sys *system.System) []TestResult {
 	skip := false
 	sysgroup := sys.NewGroup(g.Groupname, sys, util.Config{})
@@ -37,6 +39,8 @@ func (g *Group) Validate(sys *system.System) []TestResult {
 	return results
 }
 
+// NewGroup will be used to get the group by the current setting
+// Will be used for the add and auto-add features
 func NewGroup(sysGroup system.Group, config util.Config) (*Group, error) {
 	groupname := sysGroup.Groupname()
 	exists, _ := sysGroup.Exists()

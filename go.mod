@@ -6,7 +6,7 @@ require (
 	github.com/aelsabbahy/go-ps v0.0.0-20170721000941-443386855ca1
 	github.com/alecthomas/chroma v0.6.3
 	github.com/cheekybits/genny v0.0.0-20160824153601-e8e29e67948b
-	github.com/docker/docker v0.0.0-20161109014415-383a2f046b16
+	github.com/docker/docker v0.0.0-20170504205632-89658bed64c2
 	github.com/fatih/color v0.0.0-20161025120501-bf82308e8c85
 	github.com/golang/mock v1.2.0
 	github.com/miekg/dns v0.0.0-20161018060808-58f52c57ce9d

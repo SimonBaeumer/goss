@@ -34,6 +34,7 @@ type System struct {
 	NewMount       func(string, *System, util2.Config) Mount
 	NewInterface   func(string, *System, util2.Config) Interface
 	NewHTTP        func(string, *System, util2.Config) HTTP
+	NewDocker      func(string, *System, util2.Config) Docker
 	ports          map[string][]GOnetstat.Process
 	portsOnce      sync.Once
 	procMap        map[string][]ps.Process
@@ -71,6 +72,7 @@ func New() *System {
 		NewMount:       NewDefMount,
 		NewInterface:   NewDefInterface,
 		NewHTTP:        NewDefHTTP,
+		NewDocker:      NewDefDocker,
 	}
 	sys.detectService()
 	return sys
